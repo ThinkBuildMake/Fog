@@ -3,6 +3,7 @@ from flask import Flask, Blueprint
 from extensions import mongo 
 from routes.user import user
 from routes.posts import posts
+from database.models import db
 
 def create_app(config_file='settings.py'):
     app = Flask(__name__)
@@ -10,6 +11,7 @@ def create_app(config_file='settings.py'):
     
     # Register MongoDB
     mongo.init_app(app)
+    db.init_app(app)
 
     # Register Routes, pass in "url_prefix=" for route prefixes
     app.register_blueprint(user, url_prefix="/users")
