@@ -16,7 +16,7 @@ Fog uses a Python Flask backend to build a web application backend
 1. Navigate into the 
     > ./app 
     >
-    directory 
+    directory and run 
     ```
     python __init__.py
     ```
