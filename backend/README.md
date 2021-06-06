@@ -23,9 +23,10 @@ Fog uses a Python Flask backend to build a web application backend
 2. The Flask App should be running in the environment
 
 ## Environment Variables
-Consult the team for information regarding the environment variables
+Consult the team for information regarding the environment variables used in development.
 
 ## Features in Development 
 - Implementing OAuth into the project 
 - Ability to create local MongoDB instances
 - Containerization of MongoDB and Server Instances
+- Safer method of managing secrets for production
