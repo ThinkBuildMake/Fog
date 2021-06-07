@@ -1,1 +1,7 @@
 venv/*
+FogAPI/venv/*
+plantery-api/venv/*
+FogAPI/__pycache__/
+planetary-api/.idea/
+planetary-api/__pycache__/
+planetary-api/venv/
