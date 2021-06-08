@@ -32,6 +32,11 @@ Fog uses a Python Flask backend to build a web application API and database inte
     >
     directory and drop the .env file here. You should now be good. Contact Eralp if you need any help.
 
+## Installing New Dependencies
+1. Go to File > Settings > Project:backend > Project Interpreter and click the plus icon and search for what you want to install. Click Install.
+2. After this, it is very important that you add this project to the requirements file so that the team knows there is a new required dependency in the project. Go to the terminal in the bottom left of Pycharm and type:
+> pip -m freeze > requirements.txt
+>
 ## How to Run
 1. Select the run configuration in the top right menu and click the green arrow.
 2. The Flask App should be running in the environment. Click the Red Stop button to stop Flask.
