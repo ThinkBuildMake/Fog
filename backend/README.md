@@ -13,7 +13,7 @@ Fog uses a Python Flask backend to build a web application API and database inte
 5. Check to see if the virtual environment is installed. The virtual environment (VENV) is normally installed automatically by Pycharms in the previous step. 
    Go to File > Settings > Project:backend > Project Interpreter. 
    If it is installed, select the env Python interpreter in the 
-   >`Fog/venv/` 
+   >Fog/venv/
    > 
    directory from this menu and you should be good! 
    If it is not installed, select "No Interpreter" as the project interpreter and apply changes. 
@@ -22,7 +22,7 @@ Fog uses a Python Flask backend to build a web application API and database inte
 6. Once you have your venv setup, you should get a popup to install the dependencies in requirements.txt. 
    Say yes to this, and it should take care of all of your pip installations. Easy!
 7. To setup your run configuration, right click `__init__.py` under 
-   >`Fog\backend\app` 
+   >Fog\backend\app
    > 
    and click run. 
    This should generate a run configuration for you, which you can run from now on from the top right. The actual run should fail and raise a KeyError. 
