@@ -16,4 +16,4 @@ MONGODB_SETTINGS = {
 
 # Secret keys and salts
 PASSWORD_SALT= os.environ['PASSWORD_SALT']
-JWT_TOKEN_KEY= os.environ['JWT_TOKEN_KEY']
+JWT_SECRET_KEY= os.environ['JWT_SECRET_KEY']

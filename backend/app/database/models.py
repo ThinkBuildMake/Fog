@@ -1,7 +1,4 @@
-from flask_mongoengine import MongoEngine
-
-db = MongoEngine()
-
+from app.extensions import db
 
 class User(db.Document):
     email = db.EmailField(required=True)
