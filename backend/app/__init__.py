@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 
 from app.database.models import db
 from app.extensions import mongo
@@ -13,6 +14,10 @@ def create_app(config_file='settings.py', test_config=None):
     # Register MongoDB
     mongo.init_app(app)
     db.init_app(app)
+
+    #jwt
+    app.config["JWT_SECRET_KEY"] = "super-secret" #change this later
+    jwt = JWTManager(app)
 
     # Register Routes, pass in "url_prefix=" for route prefixes
     app.register_blueprint(user.bp)

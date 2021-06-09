@@ -26,9 +26,9 @@ def register():
         if test:
             return jsonify(message="That email already exists"), 409
         else:
-            first_name = request.form["first_name"]
-            last_name = request.form["last_name"]
-            password = request.form["password"]
+            first_name = request.json["first_name"]
+            last_name = request.json["last_name"]
+            password = request.json["password"]
             # Create new user
             user = User(first_name=first_name, last_name=last_name, password=password, email=email)
             # Store the hashed password
