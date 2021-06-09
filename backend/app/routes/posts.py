@@ -1,7 +1,9 @@
-from flask import Flask, Blueprint, jsonify
-posts = Blueprint("posts", __name__)
+from flask import Blueprint, jsonify
 
-@posts.route('/', methods=["GET"])
+bp = Blueprint("posts", __name__)
+
+
+@bp.route('/', methods=["GET"])
 def getPosts():
     return jsonify(
         status=200,

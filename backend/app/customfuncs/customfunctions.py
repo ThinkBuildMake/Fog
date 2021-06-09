@@ -1,5 +1,5 @@
 # A file of helper functions
-from database.models import User
+from ..database.models import User
 
 # Find a more efficient way of doing this
 signup_fields = ['email', 'first_name', 'last_name', 'password']

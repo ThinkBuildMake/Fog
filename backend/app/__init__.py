@@ -1,22 +1,22 @@
-import os
-from flask import Flask, Blueprint
-from extensions import mongo 
-from routes.user import user
-from routes.posts import posts
-from database.models import db
+from flask import Flask
 
-def create_app(config_file='settings.py'):
+from app.database.models import db
+from app.extensions import mongo
+from app.routes import posts
+from app.routes import user
+
+
+def create_app(config_file='settings.py', test_config=None):
     app = Flask(__name__)
     app.config.from_pyfile(config_file)
-    
+
     # Register MongoDB
     mongo.init_app(app)
     db.init_app(app)
 
     # Register Routes, pass in "url_prefix=" for route prefixes
-    app.register_blueprint(user, url_prefix="/users")
-    app.register_blueprint(posts, url_prefix="/posts")
+    app.register_blueprint(user.bp)
+    app.register_blueprint(posts.bp)
     return app
 
-# Feel free to turn off the debug flag during production
-create_app().run(debug=True)
+# No need to call create_app() manually, Flask should do this automatically when you set path of app to 'app'
