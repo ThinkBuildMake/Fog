@@ -36,7 +36,7 @@ def signup_validator(data):
         if field not in data:
             missing_fields.append(field)
     if len(missing_fields) > 0:
-        return {"valid": False, "msg": f"Missing fields in request {missing_fields}", "status": 409}
+        return {"valid": False, "msg": f"Missing fields in request {missing_fields}", "status": 400}
 
     # does request contain any extra field (s)
     if len(data.keys()) > len(signup_fields):
@@ -49,7 +49,7 @@ def signup_validator(data):
     # Does user exist
     user_exists = User.objects(email=data['email']).count() > 0
     if user_exists:
-        return {"valid": False, "msg": f"User with {data['email']} already exists", "status": 400}
+        return {"valid": False, "msg": f"User with {data['email']} already exists", "status": 409}
 
     # TODO: valid email
 

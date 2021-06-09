@@ -1,7 +1,7 @@
 from flask import Flask
 
 
-from app.extensions import mongo, db,jwt
+from app.extensions import mongo, db, jwt
 from app.routes.posts import posts
 from app.routes.user import user
 
@@ -14,10 +14,9 @@ def create_app(config_file='settings.py', test_config=None):
     mongo.init_app(app)
     db.init_app(app)
     jwt.init_app(app)
-    # jwt = JWTManager(JWT_TOKEN_KEY)
 
     # Register Routes, pass in "url_prefix=" for route prefixes
-    app.register_blueprint(user, url_prefix="/users")
+    app.register_blueprint(user, url_prefix="/user")
     app.register_blueprint(posts, url_prefix="/")
     return app
 

@@ -20,7 +20,7 @@ def home():
 
 @user.route('/register', methods=['POST'])
 def register():
-    try:
+    if request.is_json:
         # Get JSON from Request
         req_json = request.get_json()
 
@@ -42,14 +42,14 @@ def register():
             # Create Access Token
             access_token = create_access_token(identity=user['email'])
             return jsonify(message="User created successfully.",access_token=access_token), 201
-    
-    except Exception as e:
+
+    else:
         return jsonify(message="Request needs to be JSON format"), 400  # change this error code
 
 
 @user.route('/login', methods=['POST'])
 def login():
-    try:
+    if request.is_json:
         # Get Json from Request
         req_json = request.get_json()
 
@@ -67,12 +67,13 @@ def login():
             # Check if password is correct
             password_encrypted = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 1000)
             test = User.objects(email=email, password=password_encrypted).first()
+            
             if test:
                 access_token = create_access_token(identity=email)
                 return jsonify(message="Login Succeeded!", access_token=access_token)
             else:
                 return jsonify(message="Bad email or password"), 401
-    except Exception as e:
+    else:
         return jsonify(message="Request needs to be JSON format"), 400  # change this error code
 
 
