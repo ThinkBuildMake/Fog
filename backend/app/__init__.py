@@ -20,7 +20,7 @@ def create_app(config_file='settings.py', test_config=None):
     jwt = JWTManager(app)
 
     # Register Routes, pass in "url_prefix=" for route prefixes
-    app.register_blueprint(user.bp)
+    app.register_blueprint(user.user)
     app.register_blueprint(posts.bp)
     return app
 

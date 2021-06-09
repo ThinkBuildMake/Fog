@@ -2,10 +2,11 @@ import hashlib
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token, jwt_required
+import jwt
 
 from ..database.models import User
 
-bp = Blueprint('user', __name__)
+user = Blueprint('user', __name__)
 
 from ..settings import PASSWORD_SALT, JWT_TOKEN_KEY
 
@@ -13,12 +14,12 @@ salt = bytes(PASSWORD_SALT, 'utf-8')
 token_key = JWT_TOKEN_KEY
 
 
-@bp.route("/")
+@user.route("/")
 def home():
     return "It works! :D"
 
 
-@bp.route('/register', methods=['POST'])
+@user.route('/register', methods=['POST'])
 def register():
     if request.is_json:
         email = request.json["email"]
@@ -40,7 +41,7 @@ def register():
         return jsonify(message="Needs to be JSON format"), 404  # change this error code
 
 
-@bp.route('/login', methods=['POST'])
+@user.route('/login', methods=['POST'])
 def login():
     if request.is_json:
         # Get required fields
@@ -62,7 +63,7 @@ def login():
 
 
 # Exampmle of route that uses the token authorization mechanism
-@bp.route("/auth", methods=['POST'])
-@jwt_required()
+@user.route("/auth", methods=['POST'])
+@jwt_required
 def authorized():
     return jsonify(message="user authorized")
