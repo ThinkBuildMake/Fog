@@ -1,11 +1,15 @@
-import React from "react"
-import {useEffect, useState} from 'react';
+import React from 'react'
+import Background from '../components/Background'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 const IndexPage: React.FC = () => {
-
-	return(
-		<h1>Hello World</h1>
-	)
+    return (
+        <React.Fragment>
+            <div>
+                <Background />
+            </div>
+        </React.Fragment>
+    )
 }
 
-export default IndexPage;
+export default IndexPage
