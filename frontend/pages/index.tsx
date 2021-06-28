@@ -1,14 +1,12 @@
 import React from 'react'
-import Background from '../components/Background'
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import Header from '@components/Header/Header'
+import DefaultLayout from '@templates/DefaultLayout'
+
 const IndexPage: React.FC = () => {
     return (
-        <React.Fragment>
-            <div>
-                <Background />
-            </div>
-        </React.Fragment>
+        <DefaultLayout>
+            <Header />
+        </DefaultLayout>
     )
 }
 
