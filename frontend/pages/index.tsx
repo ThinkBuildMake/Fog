@@ -6,7 +6,6 @@ const IndexPage: React.FC = () => {
     return (
         <DefaultLayout>
             <Header />
-            <h1>WTF</h1>
         </DefaultLayout>
     )
 }
