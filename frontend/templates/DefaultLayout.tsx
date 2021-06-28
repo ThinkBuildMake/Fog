@@ -14,7 +14,6 @@ body, html {
   a,h1,h2,h3 {
       font-family: Poppins;
   }
-  
 `
 
 const Background = styled.div`

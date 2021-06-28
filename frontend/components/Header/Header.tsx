@@ -4,12 +4,7 @@ import Image from 'next/image'
 import ReactDOM from 'react-dom'
 import { NavContainer, NavMenu, NavButton } from './Styles'
 
-const NavBar: React.FC = () => {
-    const styles: { [key: string]: CSSProperties } = {
-        LI: {
-            border: '1px soild blue'
-        }
-    }
+const Header: React.FC = () => {
     return (
         <NavContainer>
             <Link href="/">
@@ -37,4 +32,4 @@ const NavBar: React.FC = () => {
     )
 }
 
-export default NavBar
+export default Header
