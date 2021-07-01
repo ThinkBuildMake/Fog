@@ -1,5 +1,5 @@
 from flask import Flask
-
+from flask_cors import CORS
 
 from app.extensions import mongo, db, jwt
 from app.routes.posts import posts
@@ -10,7 +10,10 @@ def create_app(config_file='settings.py', test_config=None):
     app = Flask(__name__)
     app.config.from_pyfile(config_file)
 
-    # Register MongoDB
+    # Add CORS support to app
+    CORS(app)
+
+    # Register Services
     mongo.init_app(app)
     db.init_app(app)
     jwt.init_app(app)
