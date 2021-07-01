@@ -5,7 +5,8 @@ import Router, { NextRouter, useRouter } from 'next/router'
 import {
     postRequest,
     envs,
-    postRequestWithoutHeaders
+    postRequestWithoutHeaders,
+    getRequest
 } from '@functions/customfuncs'
 
 const AuthContext = createContext({})
@@ -29,12 +30,18 @@ interface ContextType {
     router: NextRouter
     login: loginCallback
     logout: logoutCallback
+    user: UserType
     register: signUpCallback
 }
-
+interface UserType {
+    email: string
+    first_name: string
+    last_name: string
+}
 export const AuthProvider = ({ children }) => {
     // TODO: More substantial user information
-    const [user, setUser] = useState<boolean | null>(null)
+
+    const [user, setUser] = useState<UserType | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const router = useRouter()
 
@@ -43,17 +50,23 @@ export const AuthProvider = ({ children }) => {
             const token = localStorage.getItem('access_token')
             if (token) {
                 console.log(
-                    "Got a token in the cookies, let's see if it is valid"
+                    "Token Acquired from Local Storage, let's see if it is valid"
                 )
                 // Send Validation API Request
-                postRequest(`${envs[process.env.appEnv]}/user/auth`, {}).then(
+                getRequest(`${envs[process.env.appEnv]}/user/auth`).then(
                     (data) => {
                         // Use status to determine validity of user
                         const { status } = data
                         if (status == 200) {
-                            setUser(true)
+                            data = data.user
+                            const { first_name, last_name, email } = data
+                            setUser({
+                                first_name: first_name,
+                                last_name: last_name,
+                                email: email
+                            })
                         } else {
-                            setUser(false)
+                            setUser(null)
                         }
                     }
                 )
@@ -61,7 +74,7 @@ export const AuthProvider = ({ children }) => {
             setLoading(false)
         }
         loadUserFromToken()
-    }, [])
+    }, [router.pathname])
 
     async function register(form: signUpForm): Promise<void> {
         postRequestWithoutHeaders(`${envs[process.env.appEnv]}/user/register`, {
@@ -72,10 +85,9 @@ export const AuthProvider = ({ children }) => {
         }).then((data) => {
             const { status, message } = data
             if (status != 201) {
-                console.log(message)
+                alert(message)
             } else {
                 localStorage.setItem('access_token', data.access_token)
-                setUser(true)
                 // Redirect User to home page
                 router.push('home')
             }
@@ -88,11 +100,10 @@ export const AuthProvider = ({ children }) => {
         }).then((data) => {
             const { status, message } = data
             if (status != 200) {
-                console.log(message)
+                alert(message)
             } else {
                 // Store Token In Local storage
                 localStorage.setItem('access_token', data.access_token)
-                setUser(true)
                 // TODO: localStorage Hook
 
                 // Redirect User to home page
@@ -104,7 +115,7 @@ export const AuthProvider = ({ children }) => {
     function logout(): void {
         // Remove Tokens
         localStorage.removeItem('access_token')
-        setUser(false)
+        setUser(null)
         router.push('/')
     }
     return (

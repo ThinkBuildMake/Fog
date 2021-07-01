@@ -45,7 +45,6 @@ const RegisterForm: React.FC = () => {
     }
 
     function handleInputEvent(event: React.ChangeEvent<HTMLInputElement>) {
-        console.log(form)
         event.preventDefault()
         setForm({ ...form, [event.target.name]: event.target.value })
     }

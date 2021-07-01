@@ -10,10 +10,7 @@ import Modal from '@components/Modal/Modal'
 import SignInForm from '@components/Forms/SignInForm'
 import RegisterForm from '@components/Forms/RegisterForm'
 const Header: React.FC = () => {
-    useEffect(() => {
-        console.log(isAuthenticated)
-    }, [])
-    const { logout, isAuthenticated } = useAuth()
+    const { logout, isAuthenticated, user } = useAuth()
     return (
         <NavContainer>
             <Link href="/">
@@ -30,7 +27,9 @@ const Header: React.FC = () => {
             {isAuthenticated ? (
                 <NavMenu>
                     <NavButton color="#2f3138">
-                        <a href="/home"> Hello</a>
+                        <a href="/home">
+                            {user.first_name} {user.last_name}
+                        </a>
                     </NavButton>
                     <GenericButton
                         onClick={logout}
@@ -40,9 +39,6 @@ const Header: React.FC = () => {
                 </NavMenu>
             ) : (
                 <NavMenu>
-                    <NavButton color="#2f3138">
-                        <a href="/about">About Us</a>
-                    </NavButton>
                     <NavButton color="#2f3138">
                         <Modal
                             buttonOpenText="New User?"

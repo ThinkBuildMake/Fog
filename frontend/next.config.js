@@ -4,6 +4,6 @@ module.exports = {
     // Store Environment Variables : https://nextjs.org/docs/api-reference/next.config.js/environment-variables
     env: {
         appEnv: 'PRODUCTION'
-        // appEnv: "DEVELOPMENT"
+        // appEnv: 'DEVELOPMENT'
     }
 }
