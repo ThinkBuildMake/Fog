@@ -1,7 +1,7 @@
 import hashlib
 
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 import jwt
 
 from ..database.models import User
@@ -40,11 +40,11 @@ def register():
             user.save()
 
             # Create Access Token
-            access_token = create_access_token(identity=user['email'])
-            return jsonify(message="User created successfully.",access_token=access_token), 201
+            access_token = create_access_token(identity={"first_name": user['first_name'], "last_name": user['last_name'], "email": user['email']})
+            return jsonify(message="User created successfully.",status=201, access_token=access_token), 201
 
     else:
-        return jsonify(message="Request needs to be JSON format"), 400  # change this error code
+        return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
 
 @user.route('/login', methods=['POST'])
@@ -57,7 +57,7 @@ def login():
         validate = login_validator(req_json)
 
         if not validate['valid']:
-            return jsonify(validate, validate['status'])
+            return jsonify(validate), validate['status']
         else:
             
             # Get required fields
@@ -67,21 +67,29 @@ def login():
             # Check if password is correct
             password_encrypted = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 1000)
             test = User.objects(email=email, password=password_encrypted).first()
-            
+
+
+
             if test:
-                access_token = create_access_token(identity=email)
-                return jsonify(message="Login Succeeded!", access_token=access_token)
+                # Get additional Identifier Fields ie. firstname and lastname
+                first_name = test.first_name
+                last_name = test.last_name
+
+                access_token = create_access_token(identity={"first_name": first_name, "last_name": last_name, "email": email})
+                return jsonify(message="Login Succeeded!",status=200, access_token=access_token)
             else:
-                return jsonify(message="Bad email or password"), 401
+                return jsonify(message="Bad email or password", status=401), 401
     else:
-        return jsonify(message="Request needs to be JSON format"), 400  # change this error code
+        return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
 
 # https://stackoverflow.com/questions/55933037/how-to-send-bearer-token-to-client-and-then-call-token-from-client
 
 
-# Exampmle of route that uses the token authorization mechanism
-@user.route("/auth", methods=['POST'])
+# Protected Route that Returns the Authorized User Information
+@user.route("/auth", methods=['GET'])
 @jwt_required()
-def authorized():
-    return jsonify(message="user authorized")
+def getAuthorizedInformation(): 
+    # https://flask-jwt-extended.readthedocs.io/en/stable/basic_usage/
+    user = get_jwt_identity()
+    return jsonify(message="user authorized", status=200, user=user), 200
