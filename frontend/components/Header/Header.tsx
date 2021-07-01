@@ -8,6 +8,7 @@ import GenericButton from '@components/Button/Generic/GenericButton'
 import { Sizes } from '@functions/customfuncs'
 import Modal from '@components/Modal/Modal'
 import SignInForm from '@components/Forms/SignInForm'
+import RegisterForm from '@components/Forms/RegisterForm'
 const Header: React.FC = () => {
     useEffect(() => {
         console.log(isAuthenticated)
@@ -45,8 +46,8 @@ const Header: React.FC = () => {
                     <NavButton color="#2f3138">
                         <Modal
                             buttonOpenText="New User?"
-                            modalContent={<SignInForm />}
-                            modalTitle="Sign Up"
+                            modalContent={<RegisterForm />}
+                            modalTitle="Register For An Account"
                             buttonCloseText="Close"
                             size={Sizes.MEDIUM}
                             color="#2f3138"

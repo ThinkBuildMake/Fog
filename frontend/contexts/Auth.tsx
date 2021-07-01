@@ -2,9 +2,35 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import Router, { NextRouter, useRouter } from 'next/router'
-import { postRequest, envs } from '@functions/customfuncs'
+import {
+    postRequest,
+    envs,
+    postRequestWithoutHeaders
+} from '@functions/customfuncs'
 
 const AuthContext = createContext({})
+
+type loginCallback = (form: loginForm) => Promise<void>
+type signUpCallback = (form: signUpForm) => Promise<void>
+type logoutCallback = () => void
+interface loginForm {
+    email: string
+    password: string
+}
+interface signUpForm {
+    first_name: string
+    last_name: string
+    email: string
+    password: string
+}
+interface ContextType {
+    isAuthenticated: boolean
+    loading: boolean
+    router: NextRouter
+    login: loginCallback
+    logout: logoutCallback
+    register: signUpCallback
+}
 
 export const AuthProvider = ({ children }) => {
     // TODO: More substantial user information
@@ -20,24 +46,44 @@ export const AuthProvider = ({ children }) => {
                     "Got a token in the cookies, let's see if it is valid"
                 )
                 // Send Validation API Request
-                postRequest(`${envs.PRODUCTION}/user/auth`, {}).then((data) => {
-                    // Use status to determine validity of user
-                    const { status } = data
-                    if (status == 200) {
-                        setUser(true)
-                    } else {
-                        setUser(false)
+                postRequest(`${envs[process.env.appEnv]}/user/auth`, {}).then(
+                    (data) => {
+                        // Use status to determine validity of user
+                        const { status } = data
+                        if (status == 200) {
+                            setUser(true)
+                        } else {
+                            setUser(false)
+                        }
                     }
-                })
+                )
             }
             setLoading(false)
         }
         loadUserFromToken()
     }, [])
 
+    async function register(form: signUpForm): Promise<void> {
+        postRequestWithoutHeaders(`${envs[process.env.appEnv]}/user/register`, {
+            email: form.email,
+            password: form.password,
+            first_name: form.first_name,
+            last_name: form.last_name
+        }).then((data) => {
+            const { status, message } = data
+            if (status != 201) {
+                console.log(message)
+            } else {
+                localStorage.setItem('access_token', data.access_token)
+                setUser(true)
+                // Redirect User to home page
+                router.push('home')
+            }
+        })
+    }
     async function login(form: loginForm): Promise<void> {
-        postRequest(`${envs.PRODUCTION}/user/login`, {
-            email: form.userName,
+        postRequestWithoutHeaders(`${envs[process.env.appEnv]}/user/login`, {
+            email: form.email,
             password: form.password
         }).then((data) => {
             const { status, message } = data
@@ -69,7 +115,8 @@ export const AuthProvider = ({ children }) => {
                 login,
                 loading,
                 logout,
-                router
+                router,
+                register
             }}
         >
             {children}
@@ -77,20 +124,7 @@ export const AuthProvider = ({ children }) => {
     )
 }
 
-type loginCallback = (form: loginForm) => Promise<void>
-type logoutCallback = () => void
-interface loginForm {
-    userName: string
-    password: string
-}
 export const useAuth = () => useContext(AuthContext) as ContextType
-interface ContextType {
-    isAuthenticated: boolean
-    loading: boolean
-    router: NextRouter
-    login: loginCallback
-    logout: logoutCallback
-}
 
 //https://stackoverflow.com/questions/66640086/react-usecontext-ts-error-property-does-not-exist-on
 export const ProtectRoute = ({ children }) => {

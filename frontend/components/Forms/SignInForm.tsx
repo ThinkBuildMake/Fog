@@ -1,14 +1,10 @@
-import {
-    checkFormValuesEmpty,
-    envs,
-    postRequestWithoutHeaders
-} from '@functions/customfuncs'
-import React, { MouseEvent, useState, SyntheticEvent } from 'react'
+import { checkFormValuesEmpty } from '@functions/customfuncs'
+import React, { MouseEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAuth } from 'contexts/Auth'
 
 interface Form {
-    userName: string | null
+    email: string | null
     password: string | null
 }
 
@@ -17,7 +13,7 @@ const SignInForm: React.FC = () => {
     const { login } = useAuth()
     // Form State
     const [form, setForm] = useState<Form | null>({
-        userName: '',
+        email: '',
         password: ''
     })
 
@@ -43,12 +39,12 @@ const SignInForm: React.FC = () => {
         <div className="inner-container">
             <div className="box">
                 <div className="input-group">
-                    <label htmlFor="username">Username</label>
+                    <label htmlFor="username">Email</label>
                     <input
                         type="text"
-                        name="userName"
+                        name="email"
                         className="login-input"
-                        placeholder="Username"
+                        placeholder="Email"
                         onChange={handleInputEvent}
                     />
                 </div>

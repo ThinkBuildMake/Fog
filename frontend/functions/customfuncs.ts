@@ -48,7 +48,7 @@ interface checkReturn {
     valid: boolean
     message: string
 }
-export function checkFormValuesEmpty(form: any): checkReturn {
+export function checkFormValuesEmpty(form: object): checkReturn {
     for (var attribute in form) {
         if (form[attribute] == null || form[attribute] == '') {
             return { valid: false, message: `${attribute} not in form` }
