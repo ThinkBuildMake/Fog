@@ -10,6 +10,7 @@ interface Props {
     modalTitle: string
     modalContent: React.ReactNode
     size?: Sizes
+    color?: string
 }
 
 const _Modal: React.FC<Props> = ({
@@ -17,7 +18,8 @@ const _Modal: React.FC<Props> = ({
     buttonCloseText,
     modalContent,
     modalTitle,
-    size
+    size,
+    color
 }) => {
     // State variable determining modal open state
     const [toggle, setToggle] = useState<boolean | null>(false)
@@ -37,7 +39,8 @@ const _Modal: React.FC<Props> = ({
                 text={buttonOpenText}
                 onClick={showModal}
                 disabled={toggle}
-                size={Sizes.SMALL}
+                size={Sizes.EXTRA_SMALL}
+                color={color}
             />
             <Modal
                 ariaHideApp={false}
@@ -96,6 +99,7 @@ const _Modal: React.FC<Props> = ({
                     size={Sizes.MEDIUM}
                     text={buttonCloseText}
                     onClick={closeModal}
+                    color={color}
                 />
             </Modal>
         </div>

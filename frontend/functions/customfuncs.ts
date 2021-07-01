@@ -28,9 +28,10 @@ export function determineModalSize(size: Sizes) {
 }
 
 export function determineButtonSize(size: Sizes): string {
+    // TODO: make more scalable
     switch (size) {
         case Sizes.EXTRA_SMALL:
-            return '150px'
+            return '175px'
         case Sizes.SMALL:
             return '200px'
         case Sizes.MEDIUM:
@@ -67,7 +68,7 @@ export async function postRequest(url = '', data = {}) {
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+            Authorization: 'Bearer ' + localStorage.getItem('access_token')
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url

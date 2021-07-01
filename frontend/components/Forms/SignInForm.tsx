@@ -5,6 +5,7 @@ import {
 } from '@functions/customfuncs'
 import React, { MouseEvent, useState, SyntheticEvent } from 'react'
 import { useRouter } from 'next/router'
+import { useAuth } from 'contexts/Auth'
 
 interface Form {
     userName: string | null
@@ -13,7 +14,7 @@ interface Form {
 
 const SignInForm: React.FC = () => {
     const router = useRouter()
-
+    const { login } = useAuth()
     // Form State
     const [form, setForm] = useState<Form | null>({
         userName: '',
@@ -29,21 +30,7 @@ const SignInForm: React.FC = () => {
             alert(message)
         } else {
             // Send Request
-            postRequestWithoutHeaders(`${envs.PRODUCTION}/user/login`, {
-                email: form.userName,
-                password: form.password
-            }).then((data) => {
-                const { status, message } = data
-                if (status != 200) {
-                    console.log(message)
-                } else {
-                    // Store Token In Local storage
-                    localStorage.setItem('access_token', data.access_token)
-                    // TODO: localStorage Hook
-                    // Redirect User to home page
-                    router.push('home')
-                }
-            })
+            login(form)
         }
     }
 
