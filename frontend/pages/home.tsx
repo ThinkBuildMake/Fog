@@ -6,7 +6,7 @@ import { Sizes } from '@functions/customfuncs'
 import SignInForm from '@components/Forms/SignInForm'
 // import GenericButton from '@components/Button/Generic/GenericButton'
 
-const IndexPage: React.FC = () => {
+const Home: React.FC = () => {
     return (
         <DefaultLayout>
             <Header />
@@ -14,4 +14,4 @@ const IndexPage: React.FC = () => {
     )
 }
 
-export default IndexPage
+export default Home

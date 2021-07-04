@@ -6,12 +6,13 @@ import { Sizes } from '@functions/customfuncs'
 import SignInForm from '@components/Forms/SignInForm'
 // import GenericButton from '@components/Button/Generic/GenericButton'
 
-const IndexPage: React.FC = () => {
+const AboutPage: React.FC = () => {
     return (
         <DefaultLayout>
             <Header />
+            <h1>About</h1>
         </DefaultLayout>
     )
 }
 
-export default IndexPage
+export default AboutPage
