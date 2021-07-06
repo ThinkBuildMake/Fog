@@ -68,8 +68,6 @@ def login():
             password_encrypted = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 1000)
             test = User.objects(email=email, password=password_encrypted).first()
 
-
-
             if test:
                 # Get additional Identifier Fields ie. firstname and lastname
                 first_name = test.first_name
@@ -89,7 +87,7 @@ def login():
 # Protected Route that Returns the Authorized User Information
 @user.route("/auth", methods=['GET'])
 @jwt_required()
-def getAuthorizedInformation(): 
+def get_authorized_information(): 
     # https://flask-jwt-extended.readthedocs.io/en/stable/basic_usage/
     user = get_jwt_identity()
     return jsonify(message="user authorized", status=200, user=user), 200
