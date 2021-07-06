@@ -68,8 +68,6 @@ def login():
             password_encrypted = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 1000)
             test = User.objects(email=email, password=password_encrypted).first()
 
-
-
             if test:
                 # Get additional Identifier Fields ie. firstname and lastname
                 first_name = test.first_name
