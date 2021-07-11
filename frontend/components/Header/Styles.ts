@@ -28,9 +28,6 @@ export const NavButton = styled.li`
     border-radius: 10px;
     padding: 10px;
     margin-left: 10px;
-    background-color: ${(props) => (props.color ? props.color : '#ffffff')};
     &:hover {
-        // opacity: 0.4;
-        background-color: #005489;
     }
 `
