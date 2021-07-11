@@ -58,7 +58,6 @@ const Header: React.FC = () => {
                                 buttonCloseText="Close"
                                 size={Sizes.MEDIUM}
                             />
-                            {/* <a href="/">Sign In</a> */}
                         </NavButton>
                     </NavMenu>
                 )}
