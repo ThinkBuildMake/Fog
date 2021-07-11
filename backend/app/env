@@ -1,0 +1,5 @@
+FLASK_ENV=development
+DB_CONNECTION=mongodb+srv://fogteam0:AAEJMFog0@fog.wecsu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+DATABASE_NAME=database0
+PASSWORD_SALT=b'C;\x82\xb3\x9e\xc2\x9e\xf1\xe1\x90*\\x10\x1e\xfb\x14\xed\f~}\xd9\xa6\x1c\xe1\xe9\x03\x8ev\x83\x9dy'
+JWT_SECRET_KEY=randomasssecretkey
