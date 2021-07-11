@@ -3,9 +3,6 @@ import styled from 'styled-components'
 import Link from 'next/link'
 // TODO: Global Styles => https://blog.logrocket.com/using-styled-components-in-typescript-a-tutorial-with-examples/
 export const NavContainer = styled.nav`
-    @media (min-width: 600px) {
-        padding: 20px;
-    }
     a {
         color: white;
         text-align: center;
@@ -13,9 +10,13 @@ export const NavContainer = styled.nav`
         text-decoration: none;
         font-size: 24px;
     }
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
     display: flex;
     justify-content: space-between;
-    // border: 1px solid black;
+    height: 150px;
     align-items: center;
 `
 export const NavMenu = styled.ul`
