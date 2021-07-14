@@ -2,6 +2,8 @@ import { createGlobalStyle } from 'styled-components'
 import styled from 'styled-components'
 import React from 'react'
 import GlobalFonts from 'public/fonts/fonts'
+import { createTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/styles'
 
 // Template Taken from https://dev.to/rffaguiar/nextjs-typescript-styled-components-1i3m
 
@@ -27,12 +29,29 @@ const Background = styled.div`
     );
 `
 
+const theme = createTheme({
+    palette: {
+        primary: {
+            light: '#8e8e8e',
+            main: '#616161',
+            dark: '#373737'
+        },
+        secondary: {
+            light: '#58a5f0',
+            main: '#0277bd',
+            dark: '#004c8c'
+        }
+    }
+})
+
 const DefaultLayout = ({ children }: { children: any }) => {
     return (
         <>
-            <GlobalFonts />
-            <GlobalStyle />
-            <Background>{children}</Background>
+            <ThemeProvider theme={theme}>
+                <GlobalFonts />
+                <GlobalStyle />
+                <Background>{children}</Background>
+            </ThemeProvider>
         </>
     )
 }
