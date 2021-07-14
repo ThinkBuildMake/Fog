@@ -4,6 +4,8 @@ import React from 'react'
 import GlobalFonts from 'public/fonts/fonts'
 import Footer from '@components/Footer/Footer'
 import Header from '@components/Header/Header'
+import { createTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/styles'
 
 // Template Taken from https://dev.to/rffaguiar/nextjs-typescript-styled-components-1i3m
 
@@ -39,16 +41,33 @@ const ChildBody = styled.div`
     ); //Footer: 50px + padding 1rem *2 (one for top one for bottom)
 `
 
+const theme = createTheme({
+    palette: {
+        primary: {
+            light: '#8e8e8e',
+            main: '#616161',
+            dark: '#373737'
+        },
+        secondary: {
+            light: '#58a5f0',
+            main: '#0277bd',
+            dark: '#004c8c'
+        }
+    }
+})
+
 const DefaultLayout = ({ children }: { children: any }) => {
     return (
         <>
-            <GlobalFonts />
-            <GlobalStyle />
-            <Background>
-                <Header />
-                <ChildBody>{children}</ChildBody>
-                <Footer />
-            </Background>
+            <ThemeProvider theme={theme}>
+                <GlobalFonts />
+                <GlobalStyle />
+                <Background>
+                    <Header />
+                    <ChildBody>{children}</ChildBody>
+                    <Footer />
+                </Background>
+            </ThemeProvider>
         </>
     )
 }

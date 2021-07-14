@@ -1,10 +1,13 @@
 import React from 'react'
 import DefaultLayout from '@templates/DefaultLayout'
+import NavTabs from '@components/Navigation/Tabs'
+import Header from '@components/Header/Header'
 
 const Home: React.FC = () => {
     return (
         <DefaultLayout>
-            <h1>Home</h1>
+            <Header />
+            <NavTabs />
         </DefaultLayout>
     )
 }
