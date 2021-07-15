@@ -2,6 +2,7 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import Router, { NextRouter, useRouter } from 'next/router'
+import DefaultLayout from '@templates/DefaultLayout'
 import {
     postRequest,
     envs,
@@ -144,7 +145,11 @@ export const ProtectRoute = ({ children }) => {
         loading ||
         (!isAuthenticated && router.route != '/' && router.route != '/about')
     ) {
-        return <h1>Loading</h1>
+        return (
+            <DefaultLayout>
+                <h1>Loading</h1>
+            </DefaultLayout>
+        )
     }
     return children
 }

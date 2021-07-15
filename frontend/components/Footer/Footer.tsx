@@ -8,9 +8,7 @@ const Footer: React.FC = () => {
     return (
         <footer>
             <FooterList>
-                <FooterLinks href="">About Us</FooterLinks>
-                <FooterLinks href="">About Fog</FooterLinks>
-                <FooterLinks href="">Contact</FooterLinks>
+                <FooterLinks href="/about">About Us</FooterLinks>
                 <a href="https://github.com/ThinkBuildMake/Fog">
                     <Image
                         src="/GitHub_Logo_White.png"
