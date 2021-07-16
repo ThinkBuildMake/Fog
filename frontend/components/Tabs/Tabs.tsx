@@ -1,12 +1,14 @@
 import React from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import { RootDiv } from './Styles'
-
+import Modal from '@components/Modal/Modal'
+import { Sizes } from '@functions/customfuncs'
+import RegisterForm from '@components/Forms/ProjectForm'
+import ProjectForm from '@components/Forms/ProjectForm'
 interface TabPanelProps {
     children?: React.ReactNode
     index: any
@@ -26,7 +28,7 @@ function TabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    <Typography component={'span'}>{children}</Typography>
                 </Box>
             )}
         </div>
@@ -89,7 +91,14 @@ export default function NavTabs() {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                Projects content goes here...
+                <Modal
+                    buttonOpenText="+"
+                    modalContent={<ProjectForm />}
+                    modalTitle="Create New Project"
+                    buttonCloseText="Close"
+                    size={Sizes.MEDIUM}
+                    color="#2f3138"
+                />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 Resources content goes here...

@@ -46,7 +46,7 @@ const Header: React.FC = () => {
                                 modalContent={<RegisterForm />}
                                 modalTitle="Register For An Account"
                                 buttonCloseText="Close"
-                                size={Sizes.MEDIUM}
+                                size={Sizes.SMALL}
                                 color="#2f3138"
                             />
                         </NavButton>
@@ -56,7 +56,7 @@ const Header: React.FC = () => {
                                 modalContent={<SignInForm />}
                                 modalTitle="Sign In"
                                 buttonCloseText="Close"
-                                size={Sizes.MEDIUM}
+                                size={Sizes.SMALL}
                             />
                         </NavButton>
                     </NavMenu>
