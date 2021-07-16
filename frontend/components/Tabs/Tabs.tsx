@@ -5,6 +5,7 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
+import { RootDiv } from './Styles'
 
 interface TabPanelProps {
     children?: React.ReactNode
@@ -58,15 +59,7 @@ function LinkTab(props: LinkTabProps) {
     )
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.paper
-    }
-}))
-
 export default function NavTabs() {
-    const classes = useStyles()
     const [value, setValue] = React.useState(0)
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -74,7 +67,7 @@ export default function NavTabs() {
     }
 
     return (
-        <div className={classes.root}>
+        <RootDiv>
             <AppBar position="static">
                 <Tabs
                     value={value}
@@ -104,6 +97,6 @@ export default function NavTabs() {
             <TabPanel value={value} index={2}>
                 Datasets content goes here...
             </TabPanel>
-        </div>
+        </RootDiv>
     )
 }
