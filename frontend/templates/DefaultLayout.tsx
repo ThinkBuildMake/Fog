@@ -33,7 +33,7 @@ const Background = styled.div`
 const ChildBody = styled.div`
     position: absolute;
     width: 100%;
-    padding: 1rem;
+    padding: 2rem;
     top: 150px;
     box-sizing: border-box; // https://stackoverflow.com/questions/23397381/100-width-div-with-padding-showing-horizontal-scrollbar
     bottom: calc(
