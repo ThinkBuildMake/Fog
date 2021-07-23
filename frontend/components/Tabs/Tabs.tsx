@@ -6,6 +6,7 @@ import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import { RootDiv } from './Styles'
+import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
 
 interface TabPanelProps {
     children?: React.ReactNode
@@ -95,7 +96,7 @@ export default function NavTabs() {
                 Resources content goes here...
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Datasets content goes here...
+                <DataSetTable />
             </TabPanel>
         </RootDiv>
     )
