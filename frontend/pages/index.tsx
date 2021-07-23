@@ -9,12 +9,11 @@ const OuterDiv = styled.div`
     align-items: center;
     flex-wrap: wrap;
 
-    height: 100%;
     h1 {
-        font-size: 72px;
+        font-size: 7vh;
     }
     h3 {
-        font-size: 28px;
+        font-size: 3vh;
     }
     * {
         color: white;
@@ -31,6 +30,10 @@ const ImageDiv = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @media (max-width: 1060px) {
+        display: none;
+    }
 `
 const IndexPage: React.FC = () => {
     return (
@@ -47,7 +50,7 @@ const IndexPage: React.FC = () => {
                         src="/cloud_gear.png"
                         alt="Github"
                         width={500}
-                        height={500}
+                        height={429}
                     />
                 </ImageDiv>
             </OuterDiv>
