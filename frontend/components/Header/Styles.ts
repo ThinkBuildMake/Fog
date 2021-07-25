@@ -8,16 +8,18 @@ export const NavContainer = styled.nav`
         text-align: center;
         padding: 16px;
         text-decoration: none;
-        font-size: 24px;
+        font-size: 20px;
     }
     position: fixed;
-    top: 0;
+    top: 0px;
     right: 0;
     left: 0;
     display: flex;
     justify-content: space-between;
-    height: 150px;
+    height: 70px;
+    width: 100%;
     align-items: center;
+    background-color: black;
 `
 export const NavMenu = styled.ul`
     display: flex;
@@ -28,7 +30,7 @@ export const NavMenu = styled.ul`
 export const NavButton = styled.li`
     border-radius: 10px;
     padding: 10px;
-    margin-left: 10px;
+    margin: auto;
     &:hover {
     }
 `
