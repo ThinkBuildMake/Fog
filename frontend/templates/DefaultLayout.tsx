@@ -15,7 +15,7 @@ body, html {
     width: 100%;
     margin: 0;
   }
-  a,h1,h2,h3 {
+  a,h1,h2,h3,p,button{
       font-family: Poppins;
   }
 `
