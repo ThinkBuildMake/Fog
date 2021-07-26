@@ -7,8 +7,9 @@ import Box from '@material-ui/core/Box'
 import { RootDiv } from './Styles'
 import Modal from '@components/Modal/Modal'
 import { Sizes } from '@functions/customfuncs'
-import RegisterForm from '@components/Forms/ProjectForm'
 import ProjectForm from '@components/Forms/ProjectForm'
+import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
+
 interface TabPanelProps {
     children?: React.ReactNode
     index: any
@@ -104,7 +105,7 @@ export default function NavTabs() {
                 Resources content goes here...
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Datasets content goes here...
+                <DataSetTable />
             </TabPanel>
         </RootDiv>
     )
