@@ -9,6 +9,8 @@ import Modal from '@components/Modal/Modal'
 import { Sizes } from '@functions/customfuncs'
 import ProjectForm from '@components/Forms/ProjectForm'
 import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
+import ProjectTable from '@components/Projects/ProjectTable'
+import { useState } from 'react'
 
 interface TabPanelProps {
     children?: React.ReactNode
@@ -69,6 +71,38 @@ export default function NavTabs() {
         setValue(newValue)
     }
 
+    const [projects, setProject] = useState([
+        {
+            id: 1,
+            name: 'Sample Project 1',
+            description: 'This is a sample description',
+            resourcesUsed: 5,
+            date: '10/20/22'
+        },
+        {
+            id: 2,
+            name: 'Sample Project 10',
+            description: 'This is a sample description',
+            resourcesUsed: 5,
+            date: '10/20/22'
+        },
+        {
+            id: 3,
+            name: 'Sample Project 3',
+            description: 'This is a sample description',
+            resourcesUsed: 5,
+            date: '10/20/22'
+        }
+    ])
+
+    const filterProjects = (input) => {
+        if (input.key == 'Enter') {
+            setProject(
+                projects.filter((project) => project.id == input.target.value)
+            )
+        }
+    }
+
     return (
         <RootDiv>
             <AppBar position="static">
@@ -100,6 +134,7 @@ export default function NavTabs() {
                     size={Sizes.MEDIUM}
                     color="#2f3138"
                 />
+                <ProjectTable projects={projects} filter={filterProjects} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 Resources content goes here...
