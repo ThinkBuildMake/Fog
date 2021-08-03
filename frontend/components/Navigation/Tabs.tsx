@@ -5,6 +5,8 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
+import ProjectTable from '@components/Projects/ProjectTable'
+import { useState } from 'react'
 
 interface TabPanelProps {
     children?: React.ReactNode
@@ -73,6 +75,38 @@ export default function NavTabs() {
         setValue(newValue)
     }
 
+    const [projects, setProject] = useState([
+        {
+            id: 1,
+            name: 'Sample Project 1',
+            description: 'This is a sample description',
+            resourcesUsed: 5,
+            date: '10/20/22'
+        },
+        {
+            id: 2,
+            name: 'Sample Project 10',
+            description: 'This is a sample description',
+            resourcesUsed: 5,
+            date: '10/20/22'
+        },
+        {
+            id: 3,
+            name: 'Sample Project 3',
+            description: 'This is a sample description',
+            resourcesUsed: 5,
+            date: '10/20/22'
+        }
+    ])
+
+    const filterProjects = (input) => {
+        if (input.key == 'Enter') {
+            setProject(
+                projects.filter((project) => project.id == input.target.value)
+            )
+        }
+    }
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -96,7 +130,7 @@ export default function NavTabs() {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                Projects content goes here...
+                <ProjectTable projects={projects} filter={filterProjects} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 Resources content goes here...
