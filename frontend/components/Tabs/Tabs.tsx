@@ -97,7 +97,13 @@ export default function NavTabs() {
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <ProjectContext.Provider value={{ project, setProject }}>
-                    <ResourcesTabs />
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        <ResourcesTabs />
+                    </div>
                 </ProjectContext.Provider>
             </TabPanel>
             <TabPanel value={value} index={2}>
