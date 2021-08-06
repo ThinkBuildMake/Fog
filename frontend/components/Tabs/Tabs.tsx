@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import { RootDiv } from './Styles'
 import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
+import ResourcesTabs from './ResourcesTabs'
+import { ProjectContext } from 'contexts/Project'
 
 interface TabPanelProps {
     children?: React.ReactNode
@@ -61,7 +63,8 @@ function LinkTab(props: LinkTabProps) {
 }
 
 export default function NavTabs() {
-    const [value, setValue] = React.useState(0)
+    const [value, setValue] = useState(0)
+    const [project, setProject] = useState(true) //TODO: setProject function
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue)
@@ -93,7 +96,9 @@ export default function NavTabs() {
                 Projects content goes here...
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Resources content goes here...
+                <ProjectContext.Provider value={{ project, setProject }}>
+                    <ResourcesTabs />
+                </ProjectContext.Provider>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <DataSetTable />
