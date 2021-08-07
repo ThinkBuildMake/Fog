@@ -6,19 +6,28 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             '& > *': {
-                margin: theme.spacing(1),
+                marginBottom: theme.spacing(1),
                 width: '25ch'
             }
         }
     })
 )
-
-export default function StandardTextField() {
+interface Props {
+    onChange: React.ChangeEventHandler<HTMLInputElement>
+    error: boolean
+}
+export default function StandardTextField({ onChange, error }: Props) {
     const classes = useStyles()
 
     return (
         <form className={classes.root} noValidate autoComplete="off">
-            <TextField id="standard-basic" label="Standard" />
+            <TextField
+                onChange={onChange}
+                id="standard-basic"
+                label="Quantity"
+                helperText={!error ? '' : 'Valid Number Values Only'}
+                error={error}
+            />
         </form>
     )
 }

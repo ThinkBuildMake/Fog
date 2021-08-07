@@ -1,80 +1,44 @@
-import React, { useState } from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import React, { useEffect, useState } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
 import { RootDiv } from './Styles'
 import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
 import ResourcesTabs from './ResourcesTabs'
 import { ProjectContext } from 'contexts/Project'
-
-interface TabPanelProps {
-    children?: React.ReactNode
-    index: any
-    value: any
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`nav-tabpanel-${index}`}
-            aria-labelledby={`nav-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    )
-}
-
-function a11yProps(index: any) {
-    return {
-        id: `nav-tab-${index}`,
-        'aria-controls': `nav-tabpanel-${index}`
-    }
-}
-
-interface LinkTabProps {
-    label?: string
-    href?: string
-}
-
-function LinkTab(props: LinkTabProps) {
-    return (
-        <Tab
-            component="a"
-            onClick={(
-                event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-            ) => {
-                event.preventDefault()
-            }}
-            {...props}
-        />
-    )
-}
+import { envs, getRequest } from '@functions/customfuncs'
+import { TabPanel, a11yProps, LinkTab } from '@functions/customfuncs'
+import { Resource } from '@functions/interfaces'
 
 export default function NavTabs() {
-    const [value, setValue] = useState(0)
+    const [currentTab, setCurrentTab] = useState(0)
     const [project, setProject] = useState(true) //TODO: setProject function
+    const [resources, setResources] = useState<Resource[] | null>([
+        {
+            _id: { $oid: '' },
+            available_resources: 0,
+            capacity: 0,
+            price: 0,
+            title: ''
+        }
+    ])
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setValue(newValue)
+        setCurrentTab(newValue)
     }
+    // Load in the Hardware Resources
+    useEffect(() => {
+        getRequest(`${envs[process.env.appEnv]}/hardware/`).then(
+            (resources) => {
+                setResources(resources.data)
+            }
+        )
+    }, [])
 
     return (
         <RootDiv>
             <AppBar position="static">
                 <Tabs
-                    value={value}
+                    value={currentTab}
                     onChange={handleChange}
                     aria-label="nav tabs example"
                     centered
@@ -92,21 +56,21 @@ export default function NavTabs() {
                     <LinkTab label="Datasets" href="/spam" {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={currentTab} index={0}>
                 Projects content goes here...
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel value={currentTab} index={1}>
                 <ProjectContext.Provider value={{ project, setProject }}>
                     <div
                         style={{
                             display: 'flex'
                         }}
                     >
-                        <ResourcesTabs />
+                        <ResourcesTabs resources={resources} />
                     </div>
                 </ProjectContext.Provider>
             </TabPanel>
-            <TabPanel value={value} index={2}>
+            <TabPanel value={currentTab} index={2}>
                 <DataSetTable />
             </TabPanel>
         </RootDiv>

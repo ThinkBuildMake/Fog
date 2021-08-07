@@ -1,80 +1,31 @@
-import React, { useContext } from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import React, { useContext, useEffect } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import { ContentDiv, RootDiv } from './Styles'
-import CheckOutTable from '@components/Table/DataSetTable/CheckOutTable'
+import CheckOutTable from '@components/Table/ResourcesTable/CheckOutTable'
 import { ProjectContext } from 'contexts/Project'
-import CheckInTable from '@components/Table/DataSetTable/CheckInTable'
+import CheckInTable from '@components/Table/ResourcesTable/CheckInTable'
+import { TabPanel, a11yProps, LinkTab } from '@functions/customfuncs'
+import { Resource } from '@functions/interfaces'
 
-interface TabPanelProps {
-    children?: React.ReactNode
-    index: any
-    value: any
+interface ResourcesTabsProps {
+    resources: Resource[]
 }
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`nav-tabpanel-${index}`}
-            aria-labelledby={`nav-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    )
-}
-
-function a11yProps(index: any) {
-    return {
-        id: `nav-tab-${index}`,
-        'aria-controls': `nav-tabpanel-${index}`
-    }
-}
-
-interface LinkTabProps {
-    label?: string
-    href?: string
-}
-
-function LinkTab(props: LinkTabProps) {
-    return (
-        <Tab
-            component="a"
-            onClick={(
-                event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-            ) => {
-                event.preventDefault()
-            }}
-            {...props}
-        />
-    )
-}
-
-export default function ResourcesTabs() {
+export default function ResourcesTabs(resources: ResourcesTabsProps) {
     const { project, setProject } = useContext(ProjectContext)
-    const [value, setValue] = React.useState(0)
+    const [currentTab, setCurrentTab] = React.useState(0)
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setValue(newValue)
+        setCurrentTab(newValue)
     }
+
     if (project) {
         return (
             <ContentDiv>
                 <AppBar position="static" color="secondary">
                     <Tabs
-                        value={value}
+                        value={currentTab}
                         onChange={handleChange}
                         aria-label="nav tabs example"
                         centered
@@ -91,12 +42,12 @@ export default function ResourcesTabs() {
                         />
                     </Tabs>
                 </AppBar>
-                <TabPanel value={value} index={0}>
-                    <CheckOutTable />
+                <TabPanel value={currentTab} index={0}>
+                    <CheckOutTable resources={resources.resources} />
                 </TabPanel>
-                <TabPanel value={value} index={1}>
+                <TabPanel value={currentTab} index={1}>
                     <Box display="flex" justifyContent="center">
-                        <CheckInTable />
+                        <CheckInTable resources={resources.resources} />
                     </Box>
                 </TabPanel>
             </ContentDiv>

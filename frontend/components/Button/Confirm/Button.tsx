@@ -6,9 +6,14 @@ interface Props {
     onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-const ConfirmButton: React.FC<Props> = ({ text }) => {
+const ConfirmButton: React.FC<Props> = ({ text, onClick }) => {
     return (
-        <Button variant="contained" size="large" color="secondary">
+        <Button
+            onClick={onClick}
+            variant="contained"
+            size="large"
+            color="secondary"
+        >
             {text}
         </Button>
     )
