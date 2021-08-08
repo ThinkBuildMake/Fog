@@ -1,26 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React, {
+    createContext,
+    Reducer,
+    useEffect,
+    useReducer,
+    useState
+} from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import { RootDiv } from './Styles'
 import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
 import ResourcesTabs from './ResourcesTabs'
+import { ResourceContext } from 'contexts/Resources'
 import { ProjectContext } from 'contexts/Project'
 import { envs, getRequest } from '@functions/customfuncs'
 import { TabPanel, a11yProps, LinkTab } from '@functions/customfuncs'
-import { Resource } from '@functions/interfaces'
+import {
+    ResourcesReducer,
+    ActionKind,
+    initialState
+} from '@reducers/ResourcesReducer'
 
 export default function NavTabs() {
     const [currentTab, setCurrentTab] = useState(0)
     const [project, setProject] = useState(true) //TODO: setProject function
-    const [resources, setResources] = useState<Resource[] | null>([
-        {
-            _id: { $oid: '' },
-            available_resources: 0,
-            capacity: 0,
-            price: 0,
-            title: ''
-        }
-    ])
+    const [state, dispatch] = useReducer(ResourcesReducer, initialState)
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setCurrentTab(newValue)
@@ -29,7 +32,12 @@ export default function NavTabs() {
     useEffect(() => {
         getRequest(`${envs[process.env.appEnv]}/hardware/`).then(
             (resources) => {
-                setResources(resources.data)
+                dispatch({
+                    index: 0,
+                    payload: 0,
+                    type: ActionKind.Load,
+                    retrievedState: resources.data
+                })
             }
         )
     }, [])
@@ -66,7 +74,9 @@ export default function NavTabs() {
                             display: 'flex'
                         }}
                     >
-                        <ResourcesTabs resources={resources} />
+                        <ResourceContext.Provider value={{ state, dispatch }}>
+                            <ResourcesTabs />
+                        </ResourceContext.Provider>
                     </div>
                 </ProjectContext.Provider>
             </TabPanel>

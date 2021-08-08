@@ -7,12 +7,8 @@ import CheckOutTable from '@components/Table/ResourcesTable/CheckOutTable'
 import { ProjectContext } from 'contexts/Project'
 import CheckInTable from '@components/Table/ResourcesTable/CheckInTable'
 import { TabPanel, a11yProps, LinkTab } from '@functions/customfuncs'
-import { Resource } from '@functions/interfaces'
 
-interface ResourcesTabsProps {
-    resources: Resource[]
-}
-export default function ResourcesTabs(resources: ResourcesTabsProps) {
+export default function ResourcesTabs() {
     const { project, setProject } = useContext(ProjectContext)
     const [currentTab, setCurrentTab] = React.useState(0)
 
@@ -43,11 +39,11 @@ export default function ResourcesTabs(resources: ResourcesTabsProps) {
                     </Tabs>
                 </AppBar>
                 <TabPanel value={currentTab} index={0}>
-                    <CheckOutTable resources={resources.resources} />
+                    <CheckOutTable />
                 </TabPanel>
                 <TabPanel value={currentTab} index={1}>
                     <Box display="flex" justifyContent="center">
-                        <CheckInTable resources={resources.resources} />
+                        <CheckInTable />
                     </Box>
                 </TabPanel>
             </ContentDiv>

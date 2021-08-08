@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -13,28 +13,29 @@ import ConfirmButton from '@components/Button/Confirm/Button'
 import { TableFooter } from '@material-ui/core'
 import { Resource } from '@functions/interfaces'
 import { postRequest, envs } from '@functions/customfuncs'
+import { ResourceContext } from 'contexts/Resources'
+import { ActionKind } from '@reducers/ResourcesReducer'
 
-interface CheckoutTableProps {
-    resources: Resource[]
-}
 const useStyles = makeStyles({
     table: {
         minWidth: 700
     }
 })
 
-export default function CheckOutTable({ resources }: CheckoutTableProps) {
+export default function CheckOutTable() {
+    // Load the Resources from the Context Instead of Props
+    const { state, dispatch } = useContext(ResourceContext)
     const classes = useStyles()
     const [quantities, setQuantities] = useState<(string | number)[]>([])
 
     // Load in the Quantities => does the dependency array make sense
     useEffect(() => {
         setQuantities(
-            resources.map(() => {
+            state.map(() => {
                 return ''
             })
         )
-    }, [resources])
+    }, [state])
 
     function handleChange(
         event: React.ChangeEvent<HTMLInputElement>,
@@ -47,8 +48,7 @@ export default function CheckOutTable({ resources }: CheckoutTableProps) {
         setQuantities(tempQuantity)
     }
     function onSubmitQuery() {
-        console.log(quantities)
-        resources.map((resource, index) => {
+        state.map((resource, index) => {
             const currentQuantity: any =
                 Number(quantities[index]) !== NaN ? quantities[index] : 0
             // Check if quantities checked in is valid
@@ -57,15 +57,17 @@ export default function CheckOutTable({ resources }: CheckoutTableProps) {
                 currentQuantity <= resource.available_resources
             ) {
                 // Call method to check in resources
-                resources[index].available_resources -= currentQuantity
+                dispatch({
+                    index: index,
+                    payload: currentQuantity,
+                    type: ActionKind.Checkout
+                })
                 postRequest(
                     `${envs[process.env.appEnv]}/hardware/${
                         resource._id.$oid
                     }/checkout`,
                     { amount: currentQuantity }
-                ).then((data) => {
-                    console.log(data)
-                })
+                )
             }
         })
     }
@@ -82,7 +84,7 @@ export default function CheckOutTable({ resources }: CheckoutTableProps) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {resources.map((row, index) => (
+                    {state.map((row, index) => (
                         <TableRow key={row._id.$oid}>
                             <TableCell>{row.title}</TableCell>
                             <TableCell>{`$${row.price.toFixed(

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -13,28 +13,29 @@ import Box from '@material-ui/core/Box'
 import { TableFooter } from '@material-ui/core'
 import { Resource } from '@functions/interfaces'
 import { postRequest, envs } from '@functions/customfuncs'
+import { ActionKind } from '@reducers/ResourcesReducer'
+import { ResourceContext } from 'contexts/Resources'
 
-interface CheckinTableProps {
-    resources: Resource[]
-}
 const useStyles = makeStyles({
     table: {
         minWidth: 700
     }
 })
 
-export default function CheckInTable({ resources }: CheckinTableProps) {
+export default function CheckInTable() {
+    // Load the Resources from the Context Instead of Props
+    const { state, dispatch } = useContext(ResourceContext)
     const classes = useStyles()
     const [quantities, setQuantities] = useState<(string | number)[]>([])
 
     // Load in the Quantities
     useEffect(() => {
         setQuantities(
-            resources.map(() => {
+            state.map(() => {
                 return ''
             })
         )
-    }, [resources])
+    }, [state])
 
     function handleChange(
         event: React.ChangeEvent<HTMLInputElement>,
@@ -47,8 +48,7 @@ export default function CheckInTable({ resources }: CheckinTableProps) {
         setQuantities(tempQuantity)
     }
     function onSubmitQuery() {
-        console.log(quantities)
-        resources.map((resource, index) => {
+        state.map((resource, index) => {
             const currentQuantity: any =
                 Number(quantities[index]) !== NaN ? quantities[index] : 0
             // Check if quantities checked in is valid
@@ -58,15 +58,17 @@ export default function CheckInTable({ resources }: CheckinTableProps) {
                     resource.capacity - resource.available_resources
             ) {
                 // Call method to check in resources
-                resources[index].available_resources += currentQuantity
+                dispatch({
+                    index: index,
+                    payload: currentQuantity,
+                    type: ActionKind.Checkin
+                })
                 postRequest(
                     `${envs[process.env.appEnv]}/hardware/${
                         resource._id.$oid
                     }/checkin`,
                     { amount: currentQuantity }
-                ).then((data) => {
-                    console.log(data)
-                })
+                )
             }
         })
     }
@@ -81,7 +83,7 @@ export default function CheckInTable({ resources }: CheckinTableProps) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {resources.map((row, index) => (
+                    {state.map((row, index) => (
                         <TableRow key={row._id.$oid}>
                             <TableCell>{row.title}</TableCell>
                             <TableCell align="right">
