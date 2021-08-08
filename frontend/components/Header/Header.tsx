@@ -19,8 +19,8 @@ const Header: React.FC = () => {
                         <Image
                             src="/Logo.png"
                             alt="LOGO"
-                            width={364}
-                            height={110}
+                            width={182}
+                            height={55}
                         />
                     </a>
                 </Link>
@@ -42,7 +42,7 @@ const Header: React.FC = () => {
                     <NavMenu>
                         <NavButton color="#2f3138">
                             <Modal
-                                buttonOpenText="New User?"
+                                buttonOpenText="Sign Up"
                                 modalContent={<RegisterForm />}
                                 modalTitle="Register For An Account"
                                 buttonCloseText="Close"

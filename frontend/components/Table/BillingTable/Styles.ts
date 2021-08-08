@@ -1,10 +1,11 @@
 import styled from 'styled-components'
+//TODO: PASS HEIGHT AS PROP
 export const Table = styled.table`
     border: 1px solid black;
     width: 100%;
     border-collapse: collapse;
     overflow-y: auto;
-    max-height: calc(100vh - 6rem - 300px);
+    max-height: calc(100vh - 6rem - 650px);
     display: block;
     thead,
     tbody,
@@ -13,7 +14,8 @@ export const Table = styled.table`
         width: 100%;
     }
     th {
-        font-size: 36px;
+        font-size: 24px;
+        width: 20%;
         padding-top: 16px;
         position: sticky;
         top: 0;
@@ -26,7 +28,9 @@ export const Table = styled.table`
         background-color: white;
     }
     td {
-        font-size: 24px;
+        font-size: 20px;
+        width: 20%;
+        text-align: center;
     }
     tr {
         border-bottom: 1px solid black;
@@ -35,6 +39,17 @@ export const Table = styled.table`
         align-items: center;
         padding-top: 5px;
         padding-bottom: 5px;
+    }
+    tfoot {
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        position: sticky;
+        bottom: 0;
+        z-index: 1;
+        background-color: white;
     }
     tbody tr:last-child {
         border-bottom: none;
@@ -52,16 +67,4 @@ export const Table = styled.table`
         text-align: right;
         padding-right: 20px;
     }
-`
-export const DownloadButton = styled.a`
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    appearance: button;
-
-    text-decoration: none;
-    background-color: #c4c4c4;
-    color: black;
-    border: 1px solid black;
-    padding: 5px 16px 5px 16px;
-    border-radius: 4px;
 `

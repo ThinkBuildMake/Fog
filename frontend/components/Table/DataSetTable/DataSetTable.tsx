@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react'
 import { Table, DownloadButton } from './Styles'
-import Link from 'next/link'
-import Image from 'next/image'
-import { useAuth } from 'contexts/Auth'
-import GenericButton from '@components/Button/Generic/GenericButton'
-import { Sizes } from '@functions/customfuncs'
-import Modal from '@components/Modal/Modal'
-import SignInForm from '@components/Forms/SignInForm'
-import RegisterForm from '@components/Forms/RegisterForm'
 
 function createData(title, link) {
     return { title: title, link: link }
@@ -74,10 +66,16 @@ const DataSetTable: React.FC = () => {
     }
     return (
         <Table>
-            <DataSetTableTopRow />
-            {dataSetData.map((item) => {
-                return <DataSetTableRow title={item.title} link={item.link} />
-            })}
+            <thead>
+                <DataSetTableTopRow />
+            </thead>
+            <tbody>
+                {dataSetData.map((item) => {
+                    return (
+                        <DataSetTableRow title={item.title} link={item.link} />
+                    )
+                })}
+            </tbody>
         </Table>
     )
 }
