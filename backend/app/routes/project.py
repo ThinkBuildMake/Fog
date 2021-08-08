@@ -34,7 +34,7 @@ def home():
     return "It works! :D"
 
 
-@project.route("/create", methods=['POST'])
+@project.route("/", methods=['POST'])
 @jwt_required()
 def create_project():
     if request.is_json:
