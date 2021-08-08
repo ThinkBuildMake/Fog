@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -6,11 +6,10 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import { RootDiv } from './Styles'
 import Modal from '@components/Modal/Modal'
-import { Sizes } from '@functions/customfuncs'
+import { envs, getRequest, Sizes } from '@functions/customfuncs'
 import ProjectForm from '@components/Forms/ProjectForm'
 import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
 import ProjectTable from '@components/Projects/ProjectTable'
-import { useState } from 'react'
 
 interface TabPanelProps {
     children?: React.ReactNode
@@ -64,6 +63,13 @@ function LinkTab(props: LinkTabProps) {
     )
 }
 
+interface Project {
+    user_id: string
+    description: string
+    hardware_set: any
+    title: string
+    _id: { $oid: string }
+}
 export default function NavTabs() {
     const [value, setValue] = React.useState(0)
 
@@ -71,33 +77,51 @@ export default function NavTabs() {
         setValue(newValue)
     }
 
-    const [projects, setProject] = useState([
+    const [projects, setProjects] = useState([
         {
             id: 1,
             name: 'Sample Project 1',
-            description: 'This is a sample description',
             resourcesUsed: 5,
             date: '10/20/22'
         },
         {
             id: 2,
             name: 'Sample Project 10',
-            description: 'This is a sample description',
             resourcesUsed: 5,
             date: '10/20/22'
         },
         {
             id: 3,
             name: 'Sample Project 3',
-            description: 'This is a sample description',
             resourcesUsed: 5,
             date: '10/20/22'
         }
     ])
 
+    useEffect(() => {
+        getRequest(`${envs[process.env.appEnv]}/project/`).then((projs) => {
+            const { data, status } = projs
+            if (status == 200) {
+                let filtered = data.map((item: Project, index) => {
+                    let resourcesSum = 0
+                    for (const hardware_id in item.hardware_set) {
+                        resourcesSum += item.hardware_set[hardware_id]['qty']
+                    }
+                    return {
+                        id: item._id.$oid,
+                        name: item.title,
+                        resourcesUsed: resourcesSum,
+                        date: '10/20/22'
+                    }
+                })
+                setProjects(filtered)
+            }
+        })
+    }, [])
+
     const filterProjects = (input) => {
         if (input.key == 'Enter') {
-            setProject(
+            setProjects(
                 projects.filter((project) => project.id == input.target.value)
             )
         }

@@ -4,17 +4,21 @@ import ColumnTitles from './ColumnTitles'
 
 const ProjectTable = ({ projects, filter }) => {
     return (
-        <table>
+        <div>
             <input
                 type="search"
                 placeholder="Search project by ID"
                 onKeyDown={filter}
             />
-            <ColumnTitles />
-            {projects.map((project) => (
-                <Project project={project} />
-            ))}
-        </table>
+            <table>
+                <ColumnTitles />
+                <tbody>
+                    {projects.map((project, index) => (
+                        <Project project={project} key={`project-${index}`} />
+                    ))}
+                </tbody>
+            </table>
+        </div>
     )
 }
 

@@ -50,11 +50,13 @@ const BillingTable: React.FC<BillingProps> = ({ data }) => {
     const BillingTableFooter: React.FC = () => {
         return (
             <tfoot>
-                <th> </th>
-                <th></th>
-                <th></th>
-                <th> Total</th>
-                <th>${totalBill.toFixed(2)}</th>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Total</th>
+                    <th>${totalBill.toFixed(2)}</th>
+                </tr>
             </tfoot>
         )
     }
@@ -76,8 +78,9 @@ const BillingTable: React.FC<BillingProps> = ({ data }) => {
                         />
                     )
                 })}
-                <BillingTableFooter />
             </tbody>
+
+            <BillingTableFooter />
         </Table>
     )
 }
