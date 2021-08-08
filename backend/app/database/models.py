@@ -19,7 +19,7 @@ class Hardware(db.Document):
 class Project(db.Document):
     title = db.StringField(required=True, unique=True)
     description = db.StringField(required=True)
-    hardware_set = db.DictField(required=True)
+    hardware_set = db.DictField()
     user_id = db.StringField(required=True)
 
 

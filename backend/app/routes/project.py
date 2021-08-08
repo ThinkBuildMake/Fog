@@ -2,11 +2,28 @@ from flask import Blueprint, request, jsonify
 
 # Blueprints modularize code
 from flask_jwt_extended import jwt_required
+from mongoengine import ValidationError, NotUniqueError, OperationError
 
 from app.customfuncs.customfunctions import get_essential_json
 from app.database.models import Project
 
 project = Blueprint('project', __name__)
+
+
+# Define Exceptions
+@project.errorhandler(ValidationError)
+def handle_validation_error(error):
+    return jsonify(message=str(error), status=400), 400
+
+
+@project.errorhandler(NotUniqueError)
+def handle_not_unique_error(error):
+    return jsonify(message=str(error), status=400), 400
+
+
+@project.errorhandler(OperationError)
+def handle_operation_error(error):
+    return jsonify(message=str(error), status=400), 400
 
 
 @project.route("/")
@@ -30,3 +47,15 @@ def create_project():
         return jsonify(message="Project Created Successfully", status=201, data=project), 201
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
+
+
+# todo, add security for user deletion (users can delete other users projects)
+@project.route("/<string:id>", methods=['DELETE'])
+@jwt_required()
+def delete_project(id):
+    try:
+        project = Project.objects(id=id).first()
+    except:
+        return jsonify(message="Project ID not found", status=404), 404
+    project.delete()
+    return jsonify(message="Deletion Successful", status=200), 200
