@@ -120,6 +120,7 @@ def checkin_resource(id):
                     quantity -= cur_time[1]
                     total_cost += dummy_cost_rate * (time - cur_time[0])
                 else:
+                    hardware_set[req_json['hardware_id']]['qty'] -= quantity
                     cur_time = times[0]
                     times[0][1] -= quantity
                     total_cost += dummy_cost_rate * (time - cur_time[0])
