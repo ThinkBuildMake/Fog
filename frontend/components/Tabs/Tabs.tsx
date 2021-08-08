@@ -1,77 +1,52 @@
-import React from 'react'
+import React, {
+    createContext,
+    Reducer,
+    useEffect,
+    useReducer,
+    useState
+} from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
 import { RootDiv } from './Styles'
 import Modal from '@components/Modal/Modal'
 import { Sizes } from '@functions/customfuncs'
 import ProjectForm from '@components/Forms/ProjectForm'
 import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
+import ResourcesTabs from './ResourcesTabs'
+import { ResourceContext } from 'contexts/Resources'
+import { ProjectContext } from 'contexts/Project'
+import { envs, getRequest } from '@functions/customfuncs'
+import { TabPanel, a11yProps, LinkTab } from '@functions/customfuncs'
+import {
+    ResourcesReducer,
+    ActionKind,
+    initialState
+} from '@reducers/ResourcesReducer'
 import ProjectTable from '@components/Projects/ProjectTable'
-import { useState } from 'react'
-
-interface TabPanelProps {
-    children?: React.ReactNode
-    index: any
-    value: any
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`nav-tabpanel-${index}`}
-            aria-labelledby={`nav-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography component={'span'}>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    )
-}
-
-function a11yProps(index: any) {
-    return {
-        id: `nav-tab-${index}`,
-        'aria-controls': `nav-tabpanel-${index}`
-    }
-}
-
-interface LinkTabProps {
-    label?: string
-    href?: string
-}
-
-function LinkTab(props: LinkTabProps) {
-    return (
-        <Tab
-            component="a"
-            onClick={(
-                event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-            ) => {
-                event.preventDefault()
-            }}
-            {...props}
-        />
-    )
-}
 
 export default function NavTabs() {
-    const [value, setValue] = React.useState(0)
+    const [currentTab, setCurrentTab] = useState(0)
+    const [project, setProject] = useState(true) //TODO: setProject function
+    const [state, dispatch] = useReducer(ResourcesReducer, initialState)
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setValue(newValue)
+        setCurrentTab(newValue)
     }
+    // Load in the Hardware Resources
+    useEffect(() => {
+        getRequest(`${envs[process.env.appEnv]}/hardware/`).then(
+            (resources) => {
+                dispatch({
+                    index: 0,
+                    payload: 0,
+                    type: ActionKind.Load,
+                    retrievedState: resources.data
+                })
+            }
+        )
+    }, [])
 
-    const [projects, setProject] = useState([
+    const [projects, setProjects] = useState([
         {
             id: 1,
             name: 'Sample Project 1',
@@ -97,7 +72,7 @@ export default function NavTabs() {
 
     const filterProjects = (input) => {
         if (input.key == 'Enter') {
-            setProject(
+            setProjects(
                 projects.filter((project) => project.id == input.target.value)
             )
         }
@@ -107,7 +82,7 @@ export default function NavTabs() {
         <RootDiv>
             <AppBar position="static">
                 <Tabs
-                    value={value}
+                    value={currentTab}
                     onChange={handleChange}
                     aria-label="nav tabs example"
                     centered
@@ -125,7 +100,7 @@ export default function NavTabs() {
                     <LinkTab label="Datasets" href="/spam" {...a11yProps(2)} />
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={currentTab} index={0}>
                 <Modal
                     buttonOpenText="+"
                     modalContent={<ProjectForm />}
@@ -136,10 +111,20 @@ export default function NavTabs() {
                 />
                 <ProjectTable projects={projects} filter={filterProjects} />
             </TabPanel>
-            <TabPanel value={value} index={1}>
-                Resources content goes here...
+            <TabPanel value={currentTab} index={1}>
+                <ProjectContext.Provider value={{ project, setProject }}>
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        <ResourceContext.Provider value={{ state, dispatch }}>
+                            <ResourcesTabs />
+                        </ResourceContext.Provider>
+                    </div>
+                </ProjectContext.Provider>
             </TabPanel>
-            <TabPanel value={value} index={2}>
+            <TabPanel value={currentTab} index={2}>
                 <DataSetTable />
             </TabPanel>
         </RootDiv>

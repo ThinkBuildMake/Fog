@@ -7,3 +7,11 @@ export const RootDiv = withTheme(styled.div`
     background-color: ${(props) => props.theme.palette.background.paper};
     height: 100%;
 `)
+
+export const ContentDiv = withTheme(styled.div`
+    flex-grow: 1;
+    background-color: ${(props) => props.theme.palette.background.paper};
+    height: 100%;
+    width: 50%;
+    align: center;
+`)
