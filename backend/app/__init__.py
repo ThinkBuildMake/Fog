@@ -5,6 +5,7 @@ from app.extensions import mongo, db, jwt
 from app.routes.posts import posts
 from app.routes.user import user
 from app.routes.hardware import hardware
+from app.routes.project import project
 
 
 def create_app(config_file='settings.py', test_config=None):
@@ -21,6 +22,7 @@ def create_app(config_file='settings.py', test_config=None):
 
     # Register Routes, pass in "url_prefix=" for route prefixes
     app.register_blueprint(user, url_prefix="/user")
+    app.register_blueprint(project, url_prefix="/project")
     app.register_blueprint(posts, url_prefix="/")
     app.register_blueprint(hardware, url_prefix="/hardware")
     
