@@ -1,29 +1,30 @@
-import React, {
-    createContext,
-    Reducer,
-    useEffect,
-    useReducer,
-    useState
-} from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import { RootDiv } from './Styles'
 import Modal from '@components/Modal/Modal'
-import { Sizes } from '@functions/customfuncs'
+import { envs, getRequest, Sizes } from '@functions/customfuncs'
 import ProjectForm from '@components/Forms/ProjectForm'
 import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
 import ResourcesTabs from './ResourcesTabs'
 import { ResourceContext } from 'contexts/Resources'
 import { ProjectContext } from 'contexts/Project'
-import { envs, getRequest } from '@functions/customfuncs'
 import { TabPanel, a11yProps, LinkTab } from '@functions/customfuncs'
 import {
     ResourcesReducer,
     ActionKind,
     initialState
-} from '@reducers/ResourcesReducer'
+} from 'reducers/ResourcesReducer'
+
 import ProjectTable from '@components/Projects/ProjectTable'
 
+interface Project {
+    user_id: string
+    description: string
+    hardware_set: any
+    title: string
+    _id: { $oid: string }
+}
 export default function NavTabs() {
     const [currentTab, setCurrentTab] = useState(0)
     const [project, setProject] = useState(true) //TODO: setProject function
@@ -50,25 +51,43 @@ export default function NavTabs() {
         {
             id: 1,
             name: 'Sample Project 1',
-            description: 'This is a sample description',
             resourcesUsed: 5,
             date: '10/20/22'
         },
         {
             id: 2,
             name: 'Sample Project 10',
-            description: 'This is a sample description',
             resourcesUsed: 5,
             date: '10/20/22'
         },
         {
             id: 3,
             name: 'Sample Project 3',
-            description: 'This is a sample description',
             resourcesUsed: 5,
             date: '10/20/22'
         }
     ])
+
+    useEffect(() => {
+        getRequest(`${envs[process.env.appEnv]}/project/`).then((projs) => {
+            const { data, status } = projs
+            if (status == 200) {
+                let filtered = data.map((item: Project, index) => {
+                    let resourcesSum = 0
+                    for (const hardware_id in item.hardware_set) {
+                        resourcesSum += item.hardware_set[hardware_id]['qty']
+                    }
+                    return {
+                        id: item._id.$oid,
+                        name: item.title,
+                        resourcesUsed: resourcesSum,
+                        date: '10/20/22'
+                    }
+                })
+                setProjects(filtered)
+            }
+        })
+    }, [])
 
     const filterProjects = (input) => {
         if (input.key == 'Enter') {

@@ -50,6 +50,9 @@ export const Table = styled.table`
         bottom: 0;
         z-index: 1;
         background-color: white;
+        tr {
+            border-bottom: none;
+        }
     }
     tbody tr:last-child {
         border-bottom: none;

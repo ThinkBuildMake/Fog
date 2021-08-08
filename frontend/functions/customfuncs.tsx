@@ -170,3 +170,6 @@ export function LinkTab(props: LinkTabProps) {
         />
     )
 }
+export function getDiffFromTimeStampsInWholeHours(date1, date2) {
+    return Math.floor((date1 - date2) / 1000 / 60 / 60)
+}

@@ -1,4 +1,4 @@
-import { checkFormValuesEmpty } from '@functions/customfuncs'
+import { checkFormValuesEmpty, envs, postRequest } from '@functions/customfuncs'
 import React, { MouseEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAuth } from 'contexts/Auth'
@@ -19,7 +19,7 @@ import styled from 'styled-components'
 
 const ProjectForm: React.FC = () => {
     const router = useRouter()
-    const { register } = useAuth()
+    const { register, user } = useAuth()
 
     // Form State
     const [form, setForm] = useState<Form | null>({
@@ -36,7 +36,17 @@ const ProjectForm: React.FC = () => {
         if (!valid) {
             alert(message)
         } else {
-            console.log(form)
+            postRequest(`${envs[process.env.appEnv]}/project/create`, {
+                title: form.title,
+                description: form.description,
+                user_id: user.email
+            }).then((project) => {
+                const { data, status } = project
+                if (status == 201) {
+                    console.log(data)
+                    router.reload()
+                }
+            })
         }
     }
 
