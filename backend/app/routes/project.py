@@ -64,6 +64,7 @@ def delete_project(id):
     return jsonify(message="Deletion Successful", status=200), 200
 
 
+
 @project.route("/<string:id>/checkout", methods=['POST'])
 @jwt_required()
 def checkout_resource(id):
@@ -129,3 +130,18 @@ def checkin_resource(id):
         return jsonify(message="Checked in Hardware Set Successfully", cost=total_cost, status=200), 200
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
+
+
+@project.route("/", methods=['GET'])
+@jwt_required()
+def get_projects():
+    return jsonify(status=200, message="Success", data=Project.objects),200
+
+@project.route("/<string:id>", methods=['GET'])
+@jwt_required()
+def get_project(id):
+    project = Project.objects(id=id).first()
+    if project:
+        return jsonify(message="Success", status=200, data=project), 200
+    else:
+        return jsonify(message="Project not found", status=404),404
