@@ -7,13 +7,12 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
-import { ProjectContext } from 'contexts/Project'
 import StandardTextField from '@components/Forms/StandardTextField'
 import ConfirmButton from '@components/Button/Confirm/Button'
 import Box from '@material-ui/core/Box'
 import { TableFooter } from '@material-ui/core'
-import { createCheckinTableRow } from '@functions/customfuncs'
 import { Resource } from '@functions/interfaces'
+import { postRequest, envs } from '@functions/customfuncs'
 
 interface CheckinTableProps {
     resources: Resource[]
@@ -42,12 +41,35 @@ export default function CheckInTable({ resources }: CheckinTableProps) {
         index: number
     ) {
         let tempQuantity = [...quantities]
-        tempQuantity[index] = isNaN(parseInt(event.target.value))
+        tempQuantity[index] = isNaN(Number(event.target.value))
             ? event.target.value
             : parseInt(event.target.value)
         setQuantities(tempQuantity)
     }
-    function onSubmitForm() {}
+    function onSubmitQuery() {
+        console.log(quantities)
+        resources.map((resource, index) => {
+            const currentQuantity: any =
+                Number(quantities[index]) !== NaN ? quantities[index] : 0
+            // Check if quantities checked in is valid
+            if (
+                currentQuantity >= 1 &&
+                currentQuantity <=
+                    resource.capacity - resource.available_resources
+            ) {
+                // Call method to check in resources
+                resources[index].available_resources += currentQuantity
+                postRequest(
+                    `${envs[process.env.appEnv]}/hardware/${
+                        resource._id.$oid
+                    }/checkin`,
+                    { amount: currentQuantity }
+                ).then((data) => {
+                    console.log(data)
+                })
+            }
+        })
+    }
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="spanning table">
@@ -73,7 +95,7 @@ export default function CheckInTable({ resources }: CheckinTableProps) {
                                             quantities[index] === '' ||
                                             (typeof quantities[index] ===
                                                 'number' &&
-                                                quantities[index] >= 0 &&
+                                                quantities[index] >= 1 &&
                                                 quantities[index] <=
                                                     row.capacity -
                                                         row.available_resources)
@@ -91,7 +113,7 @@ export default function CheckInTable({ resources }: CheckinTableProps) {
                         <TableCell align="center">
                             <Box display="flex" justifyContent="center">
                                 <ConfirmButton
-                                    onClick={onSubmitForm}
+                                    onClick={onSubmitQuery}
                                     text="Confirm"
                                 />
                             </Box>

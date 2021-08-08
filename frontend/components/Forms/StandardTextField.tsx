@@ -25,7 +25,11 @@ export default function StandardTextField({ onChange, error }: Props) {
                 onChange={onChange}
                 id="standard-basic"
                 label="Quantity"
-                helperText={!error ? '' : 'Valid Number Values Only'}
+                helperText={
+                    !error
+                        ? ''
+                        : 'Must be a number greater than 1 and less than available resources'
+                }
                 error={error}
             />
         </form>

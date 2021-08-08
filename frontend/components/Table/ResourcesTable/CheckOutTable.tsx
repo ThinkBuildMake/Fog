@@ -12,6 +12,7 @@ import StandardTextField from '@components/Forms/StandardTextField'
 import ConfirmButton from '@components/Button/Confirm/Button'
 import { TableFooter } from '@material-ui/core'
 import { Resource } from '@functions/interfaces'
+import { postRequest, envs } from '@functions/customfuncs'
 
 interface CheckoutTableProps {
     resources: Resource[]
@@ -40,10 +41,33 @@ export default function CheckOutTable({ resources }: CheckoutTableProps) {
         index: number
     ) {
         let tempQuantity = [...quantities]
-        tempQuantity[index] = isNaN(parseInt(event.target.value))
+        tempQuantity[index] = isNaN(Number(event.target.value))
             ? event.target.value
             : parseInt(event.target.value)
         setQuantities(tempQuantity)
+    }
+    function onSubmitQuery() {
+        console.log(quantities)
+        resources.map((resource, index) => {
+            const currentQuantity: any =
+                Number(quantities[index]) !== NaN ? quantities[index] : 0
+            // Check if quantities checked in is valid
+            if (
+                currentQuantity >= 1 &&
+                currentQuantity <= resource.available_resources
+            ) {
+                // Call method to check in resources
+                resources[index].available_resources -= currentQuantity
+                postRequest(
+                    `${envs[process.env.appEnv]}/hardware/${
+                        resource._id.$oid
+                    }/checkout`,
+                    { amount: currentQuantity }
+                ).then((data) => {
+                    console.log(data)
+                })
+            }
+        })
     }
     return (
         <TableContainer component={Paper}>
@@ -75,7 +99,7 @@ export default function CheckOutTable({ resources }: CheckoutTableProps) {
                                         quantities[index] === '' ||
                                         (typeof quantities[index] ===
                                             'number' &&
-                                            quantities[index] >= 0 &&
+                                            quantities[index] >= 1 &&
                                             quantities[index] <=
                                                 row.available_resources)
                                             ? false
@@ -89,7 +113,10 @@ export default function CheckOutTable({ resources }: CheckoutTableProps) {
                 <TableFooter>
                     <TableRow>
                         <TableCell rowSpan={5} align="center">
-                            <ConfirmButton text="Confirm" />
+                            <ConfirmButton
+                                onClick={onSubmitQuery}
+                                text="Confirm"
+                            />
                         </TableCell>
                     </TableRow>
                 </TableFooter>
