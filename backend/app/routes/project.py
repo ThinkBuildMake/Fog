@@ -90,7 +90,7 @@ def checkout_resource(id):
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
-
+# check in resource needs updating and then billing
 @project.route("/<string:id>/checkin", methods=['POST'])
 @jwt_required()
 def checkin_resource(id):
