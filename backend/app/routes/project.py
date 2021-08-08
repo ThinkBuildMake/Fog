@@ -74,7 +74,6 @@ def checkout_resource(id):
         hardware_set = project['hardware_set']
 
         dt = datetime.datetime.now(timezone.utc)
-
         utc_time = dt.replace(tzinfo=timezone.utc)
         time = utc_time.timestamp()
 
@@ -100,15 +99,33 @@ def checkin_resource(id):
         req_json = request.get_json()
         project = Project.objects(id=id).first()
         hardware_set = project['hardware_set']
+
+        dt = datetime.datetime.now(timezone.utc)
+        utc_time = dt.replace(tzinfo=timezone.utc)
+        time = utc_time.timestamp()
+
+        dummy_cost_rate = 5
+        total_cost = 0
+
         if req_json['hardware_id'] in hardware_set:
-            if hardware_set[req_json['hardware_id']] < req_json['qty']:
-                return jsonify(message="Not enough hardware resources to perform action",
+            times = hardware_set[req_json['hardware_id']]['time']
+            quantity = req_json['qty']
+            if quantity > hardware_set[req_json['hardware_id']]['qty']:
+                return jsonify(message="Cannot check in more than quantity checked out",
                                status=400), 400  # change this error code
-            else:
-                hardware_set[req_json['hardware_id']] -= req_json['qty']
+            while quantity:
+                if quantity > times[0][1]:
+                    cur_time = times.pop(0)
+                    quantity -= cur_time[1]
+                    total_cost += dummy_cost_rate * (time - cur_time[0])
+                else:
+                    cur_time = times[0]
+                    times[0][1] -= quantity
+                    total_cost += dummy_cost_rate * (time - cur_time[0])
+                    quantity = 0
         else:
             return jsonify(message="Hardware resource not found", status=404), 404  # change this error code
         project.save()
-        return jsonify(message="Checked in Hardware Set Successfully", status=200), 200
+        return jsonify(message="Checked in Hardware Set Successfully", cost=total_cost, status=200), 200
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
