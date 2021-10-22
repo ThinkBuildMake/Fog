@@ -29,9 +29,6 @@ def handle_operation_error(error):
     return jsonify(message=str(error), status=400), 400
 
 
-@project.route("/")
-def home():
-    return "It works! :D"
 
 
 @project.route("/", methods=['POST'])

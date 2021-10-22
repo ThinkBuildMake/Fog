@@ -18,6 +18,16 @@ def home():
     return "It works! :D"
 
 
+'''
+Sample JSON API:
+{
+    "email": "passwordis123@email.com",
+    "password": "123",
+    "first_name": "yo",
+    "last_name": "haha"   
+}
+'''
+
 @user.route('/register', methods=['POST'])
 def register():
     if request.is_json:
@@ -46,7 +56,13 @@ def register():
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
-
+'''
+Sample Login API
+{
+    "email": "passwordis123@email.com",
+    "password": "123"
+}
+'''
 @user.route('/login', methods=['POST'])
 def login():
     if request.is_json:
