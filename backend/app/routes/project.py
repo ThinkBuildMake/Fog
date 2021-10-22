@@ -62,6 +62,16 @@ def delete_project(id):
 
 
 
+'''
+Json API 
+{
+    "hardware_id" : "23525",
+    "qty" : 100
+
+}
+'''
+
+
 @project.route("/<string:id>/checkout", methods=['POST'])
 @jwt_required()
 def checkout_resource(id):
@@ -88,6 +98,14 @@ def checkout_resource(id):
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
+
+'''
+JSON API
+{
+    "hardware_id" : "23525",
+    "qty" : 8
+}
+'''
 # check in resource needs updating and then billing
 @project.route("/<string:id>/checkin", methods=['POST'])
 @jwt_required()
