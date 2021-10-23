@@ -1,20 +1,16 @@
-import hashlib
-import requests
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
+
+import requests
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt, set_access_cookies
-import jwt
-import uuid
 from mongoengine import ValidationError, NotUniqueError, OperationError
 
+from ..customfuncs.customfunctions import get_essential_json
 from ..database.models import Hardware
-from ..settings import PASSWORD_SALT, JWT_SECRET_KEY
-from ..customfuncs.customfunctions import validator, get_essential_json
 
-
-# Blueprints modularize code 
+# Blueprints modularize code
 hardware = Blueprint('hardware', __name__)
 
 # Define Exceptions 
