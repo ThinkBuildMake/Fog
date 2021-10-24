@@ -14,13 +14,12 @@ class Hardware(db.Document):
     available_resources = db.IntField(required=True, min_value=0)
     price = db.FloatField(required=True, min_value=0)
 
-
-# Need update, copied from Hardware
 class Project(db.Document):
     title = db.StringField(required=True, unique=True)
     description = db.StringField(required=True)
     hardware_set = db.DictField()
     user_id = db.StringField(required=True)
+    all_users = db.ListField()
 
 
 

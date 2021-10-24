@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
 from datetime import timedelta
-
+import hashlib
 # Blueprints modularize code
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity, create_access_token, set_access_cookies
 from mongoengine import ValidationError, NotUniqueError, OperationError
@@ -10,7 +10,6 @@ from app.customfuncs.customfunctions import get_essential_json
 from app.database.models import Project
 
 from datetime import timezone
-
 project = Blueprint('project', __name__)
 
 
@@ -49,6 +48,16 @@ def refresh_expiring_jwts(response):
         # Case where there is not a valid JWT. Just return the original response
         return response
 
+
+'''
+
+Json API 
+{
+    "title" : "My test project",
+    "description" : "This is a description about my project",
+    "user_id" : "bob@gmail.com"
+}
+'''
 @project.route("/", methods=['POST'])
 @jwt_required()
 def create_project():
@@ -59,10 +68,42 @@ def create_project():
         # Handle Optional Fields
         if "hardware_set" not in req_json:
             req_json['hardware_set'] = {}  # Default Dictionary Value
-        project = Project(**get_essential_json(req_json, 'create_project'))
-        project.save()
+        if "all_users" not in req_json:
+            req_json['all_users'] = []  # Default List of users
+            req_json['all_users'].append(req_json['user_id']) # add the creator of project
+        new_project = Project(**get_essential_json(req_json, 'create_project'))
+        new_project.save()
+        return jsonify(message="Project Created Successfully", status=201, data=new_project), 201
+    else:
+        return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
-        return jsonify(message="Project Created Successfully", status=201, data=project), 201
+
+
+'''
+TEST API
+
+{
+    "user_id" : "bob@gmail.com"
+}
+
+
+'''
+@project.route("/<string:id>/add_user", methods=['POST'])
+@jwt_required()
+def add_user_to_project(id):
+    try:
+        project = Project.objects(id=id).first()
+    except:
+        return jsonify(message="Project ID not found", status=404), 404
+    if request.is_json:
+        # Get Json from Request
+        req_json = request.get_json()
+        if req_json['user_id'] not in project['all_users']:
+            project['all_users'].append(req_json['user_id']) # add specified user to set of users
+        else:
+            return jsonify(message="User already added to project", status=400, data=project), 400
+        project.save()
+        return jsonify(message="Project Updated Successfully", status=200, data=project), 200
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
