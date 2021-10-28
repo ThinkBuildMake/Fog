@@ -13,7 +13,7 @@ def create_app(config_file='settings.py', test_config=None):
     app.config.from_pyfile(config_file)
 
     # Add CORS support to app
-    CORS(app)
+    CORS(app, supports_credentials=True)
 
     # Register Services
     mongo.init_app(app)
