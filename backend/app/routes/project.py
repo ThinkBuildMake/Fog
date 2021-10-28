@@ -1,16 +1,19 @@
 from flask import Blueprint, request, jsonify
-
+from datetime import datetime
+from datetime import timedelta
+import hashlib
 # Blueprints modularize code
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity, create_access_token, set_access_cookies
 from mongoengine import ValidationError, NotUniqueError, OperationError
 
 from app.customfuncs.customfunctions import get_essential_json
 from app.database.models import Project
 
 from datetime import timezone
-import datetime
-
 project = Blueprint('project', __name__)
+
+
+
 
 
 # Define Exceptions
@@ -29,11 +32,32 @@ def handle_operation_error(error):
     return jsonify(message=str(error), status=400), 400
 
 
-@project.route("/")
-def home():
-    return "It works! :D"
+# Using an `after_request` callback, we refresh any token that is within 30
+# minutes of expiring. Change the timedeltas to match the needs of your application.
+@project.after_request
+def refresh_expiring_jwts(response):
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            set_access_cookies(response, access_token)
+        return response
+    except (RuntimeError, KeyError):
+        # Case where there is not a valid JWT. Just return the original response
+        return response
 
 
+'''
+
+Json API 
+{
+    "title" : "My test project",
+    "description" : "This is a description about my project",
+    "user_id" : "bob@gmail.com"
+}
+'''
 @project.route("/", methods=['POST'])
 @jwt_required()
 def create_project():
@@ -44,10 +68,42 @@ def create_project():
         # Handle Optional Fields
         if "hardware_set" not in req_json:
             req_json['hardware_set'] = {}  # Default Dictionary Value
-        project = Project(**get_essential_json(req_json, 'create_project'))
-        project.save()
+        if "all_users" not in req_json:
+            req_json['all_users'] = []  # Default List of users
+            req_json['all_users'].append(req_json['user_id']) # add the creator of project
+        new_project = Project(**get_essential_json(req_json, 'create_project'))
+        new_project.save()
+        return jsonify(message="Project Created Successfully", status=201, data=new_project), 201
+    else:
+        return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
-        return jsonify(message="Project Created Successfully", status=201, data=project), 201
+
+
+'''
+TEST API
+
+{
+    "user_id" : "bob@gmail.com"
+}
+
+
+'''
+@project.route("/<string:id>/add_user", methods=['POST'])
+@jwt_required()
+def add_user_to_project(id):
+    try:
+        project = Project.objects(id=id).first()
+    except:
+        return jsonify(message="Project ID not found", status=404), 404
+    if request.is_json:
+        # Get Json from Request
+        req_json = request.get_json()
+        if req_json['user_id'] not in project['all_users']:
+            project['all_users'].append(req_json['user_id']) # add specified user to set of users
+        else:
+            return jsonify(message="User already added to project", status=400, data=project), 400
+        project.save()
+        return jsonify(message="Project Updated Successfully", status=200, data=project), 200
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
@@ -63,6 +119,16 @@ def delete_project(id):
     project.delete()
     return jsonify(message="Deletion Successful", status=200), 200
 
+
+
+'''
+Json API 
+{
+    "hardware_id" : "23525",
+    "qty" : 100
+
+}
+'''
 
 
 @project.route("/<string:id>/checkout", methods=['POST'])
@@ -91,6 +157,14 @@ def checkout_resource(id):
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
+
+'''
+JSON API
+{
+    "hardware_id" : "23525",
+    "qty" : 8
+}
+'''
 # check in resource needs updating and then billing
 @project.route("/<string:id>/checkin", methods=['POST'])
 @jwt_required()
@@ -118,6 +192,7 @@ def checkin_resource(id):
                 if quantity > times[0][1]:
                     cur_time = times.pop(0)
                     quantity -= cur_time[1]
+                    hardware_set[req_json['hardware_id']]['qty'] -= cur_time[1]
                     total_cost += dummy_cost_rate * (time - cur_time[0])
                 else:
                     hardware_set[req_json['hardware_id']]['qty'] -= quantity

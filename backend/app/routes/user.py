@@ -1,22 +1,52 @@
 import hashlib
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-import jwt
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt, set_access_cookies, \
+    unset_jwt_cookies
 
+from ..customfuncs.customfunctions import login_validator, signup_validator, get_essential_json
 from ..database.models import User
 from ..settings import PASSWORD_SALT, JWT_SECRET_KEY
-from ..customfuncs.customfunctions import login_validator, signup_validator, get_essential_json
 
 # Blueprints modularize code 
 user = Blueprint('user', __name__)
 salt = bytes(PASSWORD_SALT, 'utf-8')
 token_key = JWT_SECRET_KEY
 
+# Using an `after_request` callback, we refresh any token that is within 30
+# minutes of expiring. Change the timedeltas to match the needs of your application.
+@user.after_request
+def refresh_expiring_jwts(response):
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            set_access_cookies(response, access_token)
+        return response
+    except (RuntimeError, KeyError):
+        # Case where there is not a valid JWT. Just return the original response
+        return response
+
+
 @user.route("/")
 def home():
     return "It works! :D"
 
+
+'''
+Sample JSON API:
+{
+    "email": "passwordis123@email.com",
+    "password": "123",
+    "first_name": "yo",
+    "last_name": "haha"   
+}
+'''
 
 @user.route('/register', methods=['POST'])
 def register():
@@ -46,7 +76,13 @@ def register():
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
 
-
+'''
+Sample Login API
+{
+    "email": "passwordis123@email.com",
+    "password": "123"
+}
+'''
 @user.route('/login', methods=['POST'])
 def login():
     if request.is_json:
@@ -74,11 +110,22 @@ def login():
                 last_name = test.last_name
 
                 access_token = create_access_token(identity={"first_name": first_name, "last_name": last_name, "email": email})
-                return jsonify(message="Login Succeeded!",status=200, access_token=access_token)
+
+                response = jsonify(message="Login Succeeded!",status=200, access_token=access_token)
+                set_access_cookies(response, access_token)
+
+                return response
             else:
                 return jsonify(message="Bad email or password", status=401), 401
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
+
+@user.route("/logout", methods=["POST"])
+def logout():
+    response = jsonify({"msg": "logout successful"})
+    unset_jwt_cookies(response)
+    return response
+
 
 
 # https://stackoverflow.com/questions/55933037/how-to-send-bearer-token-to-client-and-then-call-token-from-client
