@@ -15,8 +15,8 @@ import {
     ActionKind,
     initialState
 } from 'reducers/ResourcesReducer'
-
-import ProjectTable from '@components/Projects/ProjectTable'
+//import ProjectTable from '@components/Projects/ProjectTable'
+import ProjectsTable from '@components/Table/ProjectsTable/ProjectsTable'
 
 interface Project {
     user_id: string
@@ -72,7 +72,7 @@ export default function NavTabs() {
         getRequest(`${envs[process.env.appEnv]}/project/`).then((projs) => {
             const { data, status } = projs
             if (status == 200) {
-                let filtered = data.map((item: Project, index) => {
+                let filtered = data.map((item: Project) => {
                     let resourcesSum = 0
                     for (const hardware_id in item.hardware_set) {
                         resourcesSum += item.hardware_set[hardware_id]['qty']
@@ -89,13 +89,13 @@ export default function NavTabs() {
         })
     }, [])
 
-    const filterProjects = (input) => {
-        if (input.key == 'Enter') {
-            setProjects(
-                projects.filter((project) => project.id == input.target.value)
-            )
-        }
-    }
+    // const filterProjects = (input) => {
+    //     if (input.key == 'Enter') {
+    //         setProjects(
+    //             projects.filter((project) => project.id == input.target.value)
+    //         )
+    //     }
+    // }
 
     return (
         <RootDiv>
@@ -128,7 +128,7 @@ export default function NavTabs() {
                     size={Sizes.MEDIUM}
                     color="#2f3138"
                 />
-                <ProjectTable projects={projects} filter={filterProjects} />
+                <ProjectsTable projects={projects} />
             </TabPanel>
             <TabPanel value={currentTab} index={1}>
                 <ProjectContext.Provider value={{ project, setProject }}>

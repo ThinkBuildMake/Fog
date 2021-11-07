@@ -74,7 +74,11 @@ export default function CheckInTable() {
     }
     return (
         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="spanning table">
+            <Table
+                className={classes.table}
+                aria-label="spanning table"
+                stickyHeader
+            >
                 <TableHead>
                     <TableRow>
                         <TableCell>Resource</TableCell>
@@ -112,13 +116,13 @@ export default function CheckInTable() {
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <TableCell align="center">
-                            <Box display="flex" justifyContent="center">
-                                <ConfirmButton
-                                    onClick={onSubmitQuery}
-                                    text="Confirm"
-                                />
-                            </Box>
+                        <TableCell />
+                        <TableCell />
+                        <TableCell align="right">
+                            <ConfirmButton
+                                onClick={onSubmitQuery}
+                                text="Confirm"
+                            />
                         </TableCell>
                     </TableRow>
                 </TableFooter>

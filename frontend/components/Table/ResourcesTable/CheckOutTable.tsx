@@ -73,7 +73,11 @@ export default function CheckOutTable() {
     }
     return (
         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="spanning table">
+            <Table
+                className={classes.table}
+                aria-label="spanning table"
+                stickyHeader
+            >
                 <TableHead>
                     <TableRow>
                         <TableCell>Resource</TableCell>
@@ -114,7 +118,11 @@ export default function CheckOutTable() {
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <TableCell rowSpan={5} align="center">
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                        <TableCell align="right">
                             <ConfirmButton
                                 onClick={onSubmitQuery}
                                 text="Confirm"
