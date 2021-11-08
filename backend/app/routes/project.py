@@ -40,7 +40,7 @@ Json API
     "user_id" : "bob@gmail.com"
 }
 '''
-@project.route("/", methods=['POST'])
+@project.route("/create", methods=['POST'])
 @jwt_required()
 def create_project():
     if request.is_json:
