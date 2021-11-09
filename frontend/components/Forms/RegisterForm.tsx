@@ -2,6 +2,8 @@ import { checkFormValuesEmpty } from '@functions/customfuncs'
 import React, { MouseEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAuth } from 'contexts/Auth'
+import { Sizes } from '@functions/customfuncs'
+import GenericButton from '@components/Button/Generic/GenericButton'
 import {
     Table,
     OneColumnRow,
@@ -15,8 +17,19 @@ interface Form {
     first_name: string | null
     last_name: string | null
 }
+interface CloseButton {
+    closeFunc: (event: React.MouseEvent<HTMLButtonElement>) => void
+    closeTxt: string
+    color: string
+    size?: Sizes
+}
 
-const RegisterForm: React.FC = () => {
+const RegisterForm: React.FC<CloseButton> = ({
+    closeFunc,
+    closeTxt,
+    color,
+    size
+}) => {
     const router = useRouter()
     const { register } = useAuth()
 
@@ -120,6 +133,12 @@ const RegisterForm: React.FC = () => {
             >
                 Register
             </button>
+            <GenericButton
+                size={size}
+                text={closeTxt}
+                onClick={closeFunc}
+                color={color}
+            />
         </Table>
     )
 }

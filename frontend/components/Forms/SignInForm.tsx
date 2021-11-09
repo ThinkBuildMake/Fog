@@ -1,6 +1,8 @@
 import { checkFormValuesEmpty } from '@functions/customfuncs'
 import React, { MouseEvent, useState } from 'react'
 import { useRouter } from 'next/router'
+import { Sizes } from '@functions/customfuncs'
+import GenericButton from '@components/Button/Generic/GenericButton'
 import { useAuth } from 'contexts/Auth'
 import {
     Table,
@@ -13,8 +15,18 @@ interface Form {
     email: string | null
     password: string | null
 }
-
-const SignInForm: React.FC = () => {
+interface CloseButton {
+    closeFunc: (event: React.MouseEvent<HTMLButtonElement>) => void
+    closeTxt: string
+    color: string
+    size?: Sizes
+}
+const SignInForm: React.FC<CloseButton> = ({
+    closeFunc,
+    closeTxt,
+    color,
+    size
+}) => {
     const router = useRouter()
     const { login } = useAuth()
     // Form State
@@ -68,6 +80,12 @@ const SignInForm: React.FC = () => {
             <button type="button" className="login-btn" onClick={submitSignIn}>
                 Login
             </button>
+            <GenericButton
+                size={size}
+                text={closeTxt}
+                onClick={closeFunc}
+                color={color}
+            />
         </Table>
     )
 }

@@ -122,7 +122,7 @@ export default function NavTabs() {
             <TabPanel value={currentTab} index={0}>
                 <Modal
                     buttonOpenText="+"
-                    modalContent={<ProjectForm />}
+                    modalContent={ProjectForm}
                     modalTitle="Create New Project"
                     buttonCloseText="Close"
                     size={Sizes.MEDIUM}
