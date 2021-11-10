@@ -101,6 +101,8 @@ export default function CheckOutTable() {
                             <TableCell align="right">
                                 <StandardTextField
                                     onChange={(e) => handleChange(e, index)}
+                                    label="Quantity"
+                                    errorMsg="Must be a number greater than 1 and less than available resources"
                                     error={
                                         quantities[index] === '' ||
                                         (typeof quantities[index] ===

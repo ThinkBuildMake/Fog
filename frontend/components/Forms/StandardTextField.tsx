@@ -32,7 +32,7 @@ export default function StandardTextField({
                 onChange={onChange}
                 id="standard-basic"
                 label={label}
-                helperText={!error ? '' : { errorMsg }}
+                helperText={!error ? '' : errorMsg}
                 error={error}
             />
         </form>
