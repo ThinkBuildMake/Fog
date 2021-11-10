@@ -27,6 +27,7 @@ export default function CheckInTable() {
     const { state, dispatch } = useContext(ResourceContext)
     const classes = useStyles()
     const [quantities, setQuantities] = useState<(string | number)[]>([])
+    const [ids, setIDs] = useState<(string | number)[]>([])
 
     // Load in the Quantities
     useEffect(() => {
@@ -36,6 +37,16 @@ export default function CheckInTable() {
             })
         )
     }, [state])
+
+    //Function for handling Project ID
+    function handleIDChange(
+        event: React.ChangeEvent<HTMLInputElement>,
+        index: number
+    ) {
+        let tempIDs = [...ids]
+        tempIDs[index] = event.target.value
+        setIDs(tempIDs)
+    }
 
     function handleChange(
         event: React.ChangeEvent<HTMLInputElement>,
@@ -51,6 +62,8 @@ export default function CheckInTable() {
         state.map((resource, index) => {
             const currentQuantity: any =
                 Number(quantities[index]) !== NaN ? quantities[index] : 0
+
+            const currentProjID = ids[index]
             // Check if quantities checked in is valid
             if (
                 currentQuantity >= 1 &&
@@ -83,6 +96,7 @@ export default function CheckInTable() {
                     <TableRow>
                         <TableCell>Resource</TableCell>
                         <TableCell align="right">Available</TableCell>
+                        <TableCell align="right">Project ID</TableCell>
                         <TableCell align="right">Quantity</TableCell>
                     </TableRow>
                 </TableHead>
@@ -95,8 +109,33 @@ export default function CheckInTable() {
                             </TableCell>
                             <TableCell align="right">
                                 {
+                                    //TODO: Add an error of the input ID doesn't exist
+                                    <StandardTextField
+                                        onChange={(e) =>
+                                            handleIDChange(e, index)
+                                        }
+                                        label="Project ID"
+                                        errorMsg="Input ID is invalid"
+                                        error={
+                                            ids[index] === '' // ||
+                                            // (typeof quantities[index] ===
+                                            //     'number' &&
+                                            //     quantities[index] >= 1 &&
+                                            //     quantities[index] <=
+                                            //         row.capacity -
+                                            //             row.available_resources)
+                                            //     ? false
+                                            //     : true
+                                        }
+                                    />
+                                }
+                            </TableCell>
+                            <TableCell align="right">
+                                {
                                     <StandardTextField
                                         onChange={(e) => handleChange(e, index)}
+                                        label="Quantity"
+                                        errorMsg="Must be a number greater than 1 and less than available resources"
                                         error={
                                             quantities[index] === '' ||
                                             (typeof quantities[index] ===
@@ -116,6 +155,7 @@ export default function CheckInTable() {
                 </TableBody>
                 <TableFooter>
                     <TableRow>
+                        <TableCell />
                         <TableCell />
                         <TableCell />
                         <TableCell align="right">

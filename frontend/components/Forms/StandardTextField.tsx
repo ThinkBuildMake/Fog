@@ -14,9 +14,16 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 interface Props {
     onChange: React.ChangeEventHandler<HTMLInputElement>
+    label: string
+    errorMsg: string
     error: boolean
 }
-export default function StandardTextField({ onChange, error }: Props) {
+export default function StandardTextField({
+    onChange,
+    label,
+    errorMsg,
+    error
+}: Props) {
     const classes = useStyles()
 
     return (
@@ -24,12 +31,8 @@ export default function StandardTextField({ onChange, error }: Props) {
             <TextField
                 onChange={onChange}
                 id="standard-basic"
-                label="Quantity"
-                helperText={
-                    !error
-                        ? ''
-                        : 'Must be a number greater than 1 and less than available resources'
-                }
+                label={label}
+                helperText={!error ? '' : { errorMsg }}
                 error={error}
             />
         </form>
