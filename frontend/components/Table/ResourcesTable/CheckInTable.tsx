@@ -68,7 +68,8 @@ export default function CheckInTable() {
             if (
                 currentQuantity >= 1 &&
                 currentQuantity <=
-                    resource.capacity - resource.available_resources
+                    resource.capacity - resource.available_resources &&
+                currentProjID !== ''
             ) {
                 // Call method to check in resources
                 dispatch({
@@ -77,10 +78,13 @@ export default function CheckInTable() {
                     type: ActionKind.Checkin
                 })
                 postRequest(
-                    `${envs[process.env.appEnv]}/hardware/${
-                        resource._id.$oid
-                    }/checkin`,
-                    { amount: currentQuantity }
+                    `${
+                        envs[process.env.appEnv]
+                    }/project/${currentProjID}/checkin`,
+                    {
+                        hardware_id: resource._id.$oid,
+                        qty: currentQuantity
+                    }
                 )
             }
         })
