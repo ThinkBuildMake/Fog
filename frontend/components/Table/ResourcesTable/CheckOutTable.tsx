@@ -27,6 +27,7 @@ export default function CheckOutTable() {
     const { state, dispatch } = useContext(ResourceContext)
     const classes = useStyles()
     const [quantities, setQuantities] = useState<(string | number)[]>([])
+    const [ids, setIDs] = useState<(string | number)[]>([])
 
     // Load in the Quantities => does the dependency array make sense
     useEffect(() => {
@@ -36,6 +37,16 @@ export default function CheckOutTable() {
             })
         )
     }, [state])
+
+    //Function for handling Project ID
+    function handleIDChange(
+        event: React.ChangeEvent<HTMLInputElement>,
+        index: number
+    ) {
+        let tempIDs = [...ids]
+        tempIDs[index] = event.target.value
+        setIDs(tempIDs)
+    }
 
     function handleChange(
         event: React.ChangeEvent<HTMLInputElement>,
@@ -56,7 +67,7 @@ export default function CheckOutTable() {
                 currentQuantity >= 1 &&
                 currentQuantity <= resource.available_resources
             ) {
-                // Call method to check in resources
+                // Call method to check out resources
                 dispatch({
                     index: index,
                     payload: currentQuantity,
@@ -84,6 +95,7 @@ export default function CheckOutTable() {
                         <TableCell>Price</TableCell>
                         <TableCell align="right">Capacity</TableCell>
                         <TableCell align="right">Available</TableCell>
+                        <TableCell align="right">Project ID</TableCell>
                         <TableCell align="right">Quantity</TableCell>
                     </TableRow>
                 </TableHead>
@@ -97,6 +109,29 @@ export default function CheckOutTable() {
                             <TableCell align="right">{row.capacity}</TableCell>
                             <TableCell align="right">
                                 {row.available_resources}
+                            </TableCell>
+                            <TableCell align="right">
+                                {
+                                    //TODO: Add an error of the input ID doesn't exist
+                                    <StandardTextField
+                                        onChange={(e) =>
+                                            handleIDChange(e, index)
+                                        }
+                                        label="Project ID"
+                                        errorMsg="Input ID is invalid"
+                                        error={
+                                            ids[index] === '' // ||
+                                            // (typeof quantities[index] ===
+                                            //     'number' &&
+                                            //     quantities[index] >= 1 &&
+                                            //     quantities[index] <=
+                                            //         row.capacity -
+                                            //             row.available_resources)
+                                            //     ? false
+                                            //     : true
+                                        }
+                                    />
+                                }
                             </TableCell>
                             <TableCell align="right">
                                 <StandardTextField
@@ -120,6 +155,7 @@ export default function CheckOutTable() {
                 </TableBody>
                 <TableFooter>
                     <TableRow>
+                        <TableCell />
                         <TableCell />
                         <TableCell />
                         <TableCell />
