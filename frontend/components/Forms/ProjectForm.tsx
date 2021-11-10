@@ -101,32 +101,6 @@ const ProjectForm: React.FC<CloseButton> = ({
                     />
                 </td>
             </OneColumnRow>
-            <TwoColumnsRow>
-                <TwoColumnRowElement>
-                    <th>Project Id</th>
-                    <td>
-                        <input
-                            type="text"
-                            name="project_id"
-                            placeholder="Put a Unique Project Id Here"
-                            onChange={handleInputEvent}
-                        />
-                    </td>
-                </TwoColumnRowElement>
-                <TwoColumnRowElement>
-                    <th>Max Resources</th>
-                    <td>
-                        <input
-                            type="number"
-                            name="resources"
-                            onChange={handleInputEvent}
-                            placeholder="0"
-                            min="0"
-                            max="100"
-                        />
-                    </td>
-                </TwoColumnRowElement>
-            </TwoColumnsRow>
             <button
                 type="button"
                 className="login-btn"
