@@ -1,3 +1,4 @@
+import requests
 from flask import Blueprint, request, jsonify
 from datetime import datetime
 from datetime import timedelta
@@ -40,7 +41,7 @@ Json API
     "user_id" : "bob@gmail.com"
 }
 '''
-@project.route("/", methods=['POST'])
+@project.route("/create", methods=['POST'])
 @jwt_required()
 def create_project():
     if request.is_json:
@@ -122,7 +123,7 @@ def checkout_resource(id):
         project = Project.objects(id=id).first()
         hardware_set = project['hardware_set']
 
-        dt = datetime.datetime.now(timezone.utc)
+        dt = datetime.now(timezone.utc)
         utc_time = dt.replace(tzinfo=timezone.utc)
         time = utc_time.timestamp()
 
@@ -134,6 +135,13 @@ def checkout_resource(id):
             # {hardwareid: {'qty': 5, 'time': [['1:09':5],['1:10':10]}, hardwareid2: {'qty': 5, 'time': [['1:09':5],['1:10':10]}}
             hardware_set[req_json['hardware_id']] = {'qty': req_json['qty'], 'time': [[time, req_json['qty']]]}
         project.save()
+
+        # Make Request
+
+        # Update global Hardware resources
+        bearer = request.headers.get("Authorization")
+        requests.post(url=f"https://fog-test-abuimpincq-uc.a.run.app/hardware/{req_json['hardware_id']}/checkout", json={"amount": req_json['qty']},
+                      headers={'Authorization': bearer})
 
         return jsonify(message="Checked out Hardware Set Successfully", status=200), 200
     else:
@@ -157,7 +165,7 @@ def checkin_resource(id):
         project = Project.objects(id=id).first()
         hardware_set = project['hardware_set']
 
-        dt = datetime.datetime.now(timezone.utc)
+        dt = datetime.now(timezone.utc)
         utc_time = dt.replace(tzinfo=timezone.utc)
         time = utc_time.timestamp()
 
@@ -185,6 +193,11 @@ def checkin_resource(id):
         else:
             return jsonify(message="Hardware resource not found", status=404), 404  # change this error code
         project.save()
+
+        # Update global Hardware resources
+        bearer = request.headers.get("Authorization")
+        requests.post(url=f"https://fog-test-abuimpincq-uc.a.run.app/hardware/{req_json['hardware_id']}/checkin", json={"amount": req_json['qty']},
+                      headers={'Authorization': bearer})
         return jsonify(message="Checked in Hardware Set Successfully", cost=total_cost, status=200), 200
     else:
         return jsonify(message="Request needs to be JSON format", status=400), 400  # change this error code
