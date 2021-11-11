@@ -62,23 +62,37 @@ export default function CheckOutTable() {
         state.map((resource, index) => {
             const currentQuantity: any =
                 Number(quantities[index]) !== NaN ? quantities[index] : 0
+            const currentProjID = ids[index]
             // Check if quantities checked in is valid
             if (
                 currentQuantity >= 1 &&
-                currentQuantity <= resource.available_resources
+                currentQuantity <= resource.available_resources &&
+                currentProjID !== ''
             ) {
                 // Call method to check out resources
-                dispatch({
-                    index: index,
-                    payload: currentQuantity,
-                    type: ActionKind.Checkout
-                })
                 postRequest(
-                    `${envs[process.env.appEnv]}/hardware/${
-                        resource._id.$oid
-                    }/checkout`,
-                    { amount: currentQuantity }
-                )
+                    `${
+                        envs[process.env.appEnv]
+                    }/project/${currentProjID}/checkout`,
+                    {
+                        hardware_id: resource._id.$oid,
+                        qty: currentQuantity
+                    }
+                ).then((response) => {
+                    const { status } = response
+                    const { message } = response
+                    if (status === 404) {
+                        if (message === 'Project ID not found') {
+                            alert(currentProjID + ' is not a valid ID')
+                        }
+                    } else if (status === 200) {
+                        dispatch({
+                            index: index,
+                            payload: currentQuantity,
+                            type: ActionKind.Checkout
+                        })
+                    }
+                })
             }
         })
     }

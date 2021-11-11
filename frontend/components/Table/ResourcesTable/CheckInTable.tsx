@@ -72,11 +72,7 @@ export default function CheckInTable() {
                 currentProjID !== ''
             ) {
                 // Call method to check in resources
-                dispatch({
-                    index: index,
-                    payload: currentQuantity,
-                    type: ActionKind.Checkin
-                })
+
                 postRequest(
                     `${
                         envs[process.env.appEnv]
@@ -85,7 +81,21 @@ export default function CheckInTable() {
                         hardware_id: resource._id.$oid,
                         qty: currentQuantity
                     }
-                )
+                ).then((response) => {
+                    const { status } = response
+                    const { message } = response
+                    if (status === 404) {
+                        if (message === 'Project ID not found') {
+                            alert(currentProjID + ' is not a valid ID')
+                        }
+                    } else if (status === 200) {
+                        dispatch({
+                            index: index,
+                            payload: currentQuantity,
+                            type: ActionKind.Checkin
+                        })
+                    }
+                })
             }
         })
     }
