@@ -39,60 +39,55 @@ const ProjectView: React.FC = () => {
     const { project_id } = router.query
     useEffect(() => {
         //TODO: Type all of these
-        getRequest(`${envs[process.env.appEnv]}/project/${project_id}`).then(
-            (proj) => {
-                const { data, status } = proj
-                if (status == 200) {
-                    // Get every
-                    let billingInfo = Promise.all(
-                        Object.keys(data.hardware_set).map(
-                            (hardware_id, index) => {
-                                let resp = getRequest(
-                                    `${
-                                        envs[process.env.appEnv]
-                                    }/hardware/${hardware_id}`
-                                ).then((resource) => {
-                                    // Calculate the Average Hours used
-                                    let hours = 0
-                                    let value =
-                                        data.hardware_set[hardware_id].time
-                                    let totalQuantity =
-                                        data.hardware_set[hardware_id].qty
-                                    value.forEach((element) => {
-                                        // Multiply by 1000 to convert from s to ms
-                                        let timestamp = element[0] * 1000,
-                                            qty = element[1]
-                                        const diff =
-                                            getDiffFromTimeStampsInWholeHours(
-                                                Date.now(),
-                                                timestamp
-                                            )
-                                        const weight = qty / totalQuantity
-                                        hours += diff * weight
-                                    })
-                                    return {
-                                        title: resource.data.title,
-                                        price: resource.data.price.toFixed(2),
-                                        quantity:
-                                            data.hardware_set[hardware_id].qty,
-                                        hours: hours,
-                                        cost: hours * resource.data.price
-                                    }
-                                })
-                                return resp
+        getRequest(
+            `${envs[process.env.appEnv]}/project/${project_id}/project_id`
+        ).then((proj) => {
+            const { data, status } = proj
+            if (status == 200) {
+                // Get every
+                let billingInfo = Promise.all(
+                    Object.keys(data.hardware_set).map((hardware_id, index) => {
+                        let resp = getRequest(
+                            `${
+                                envs[process.env.appEnv]
+                            }/hardware/${hardware_id}`
+                        ).then((resource) => {
+                            // Calculate the Average Hours used
+                            let hours = 0
+                            let value = data.hardware_set[hardware_id].time
+                            let totalQuantity =
+                                data.hardware_set[hardware_id].qty
+                            value.forEach((element) => {
+                                // Multiply by 1000 to convert from s to ms
+                                let timestamp = element[0] * 1000,
+                                    qty = element[1]
+                                const diff = getDiffFromTimeStampsInWholeHours(
+                                    Date.now(),
+                                    timestamp
+                                )
+                                const weight = qty / totalQuantity
+                                hours += diff * weight
+                            })
+                            return {
+                                title: resource.data.title,
+                                price: resource.data.price.toFixed(2),
+                                quantity: data.hardware_set[hardware_id].qty,
+                                hours: hours,
+                                cost: hours * resource.data.price
                             }
-                        )
-                    ).then((billing) => {
-                        setProject({
-                            title: data.title,
-                            project_id: project_id,
-                            description: data.description,
-                            billing: billing
                         })
+                        return resp
                     })
-                }
+                ).then((billing) => {
+                    setProject({
+                        title: data.title,
+                        project_id: project_id,
+                        description: data.description,
+                        billing: billing
+                    })
+                })
             }
-        )
+        })
     }, [])
     const Outline = styled.div`
         display: flex;

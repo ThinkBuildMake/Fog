@@ -55,7 +55,9 @@ export default function NavTabs() {
     //User is defined by their email
     useEffect(() => {
         getRequest(
-            `${envs[process.env.appEnv]}/project/${currentUser.user.email}`
+            `${envs[process.env.appEnv]}/project/${
+                currentUser.user.email
+            }/email`
         ).then((projs) => {
             const { data, status } = projs
             if (status == 200) {
