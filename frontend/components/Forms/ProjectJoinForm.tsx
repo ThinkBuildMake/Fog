@@ -54,7 +54,7 @@ const ProjectJoinForm: React.FC<CloseButton> = ({
                 }
             ).then((project) => {
                 const { data, status } = project
-                if (status == 201) {
+                if (status == 200) {
                     console.log(data)
                     router.reload()
                 }
