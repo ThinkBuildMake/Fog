@@ -11,7 +11,7 @@ json_extract_fields = {
     "signup_fields": ['email', 'first_name', 'last_name', 'password'],
     "login_fields": ['email', 'password'],
     "create_resource": ['title', 'capacity', 'available_resources', 'price'],
-    "create_project": ['title', 'description', 'hardware_set', 'user_id', 'all_users']
+    "create_project": ['title', 'description', 'hardware_set', 'user_id', 'all_users', 'create_date']
 }
 
 

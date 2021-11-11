@@ -20,6 +20,7 @@ class Project(db.Document):
     hardware_set = db.DictField()
     user_id = db.StringField(required=True)
     all_users = db.ListField()
+    create_date = db.StringField()
 
 
 
