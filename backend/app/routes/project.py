@@ -49,12 +49,18 @@ def create_project():
         # Get Json from Request
         req_json = request.get_json()
 
+
         # Handle Optional Fields
         if "hardware_set" not in req_json:
             req_json['hardware_set'] = {}  # Default Dictionary Value
         if "all_users" not in req_json:
             req_json['all_users'] = []  # Default List of users
             req_json['all_users'].append(req_json['user_id']) # add the creator of project
+
+        # add creation date
+        dt = datetime.now(timezone.utc) # international standard
+        req_json['create_date'] = dt.date().isoformat()
+
         new_project = Project(**get_essential_json(req_json, 'create_project'))
         new_project.save()
         return jsonify(message="Project Created Successfully", status=201, data=new_project), 201
