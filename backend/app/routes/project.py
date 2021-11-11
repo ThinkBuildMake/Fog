@@ -9,6 +9,7 @@ from mongoengine import ValidationError, NotUniqueError, OperationError
 
 from app.customfuncs.customfunctions import get_essential_json
 from app.database.models import Project
+from app.database.models import Hardware
 
 from datetime import timezone
 project = Blueprint('project', __name__)
@@ -124,7 +125,10 @@ def checkout_resource(id):
             project = Project.objects(id=id).first()
         except:
             return jsonify(message="Project ID not found", status=404), 404
-
+        try:
+            globalHardware = Hardware.objects(id=req_json['hardware_id']).first()
+        except:
+            return jsonify(message="Global Hardware ID not found", status=404), 404
 
         hardware_set = project['hardware_set']
 
@@ -171,6 +175,11 @@ def checkin_resource(id):
             project = Project.objects(id=id).first()
         except:
             return jsonify(message="Project ID not found", status=404), 404
+        try:
+            globalHardware = Hardware.objects(id=req_json['hardware_id']).first()
+        except:
+            return jsonify(message="Global Hardware ID not found", status=404), 404
+
         hardware_set = project['hardware_set']
 
         dt = datetime.now(timezone.utc)
