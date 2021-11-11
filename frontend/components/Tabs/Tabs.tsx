@@ -47,27 +47,9 @@ export default function NavTabs() {
         )
     }, [])
 
-    const [projects, setProjects] = useState([
-        {
-            id: 1,
-            name: 'Sample Project 1',
-            resourcesUsed: 5,
-            date: '10/20/22'
-        },
-        {
-            id: 2,
-            name: 'Sample Project 10',
-            resourcesUsed: 5,
-            date: '10/20/22'
-        },
-        {
-            id: 3,
-            name: 'Sample Project 3',
-            resourcesUsed: 5,
-            date: '10/20/22'
-        }
-    ])
+    const [projects, setProjects] = useState([])
 
+    //User is defined by their email
     useEffect(() => {
         getRequest(`${envs[process.env.appEnv]}/project/`).then((projs) => {
             const { data, status } = projs
