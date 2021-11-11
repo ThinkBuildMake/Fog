@@ -130,6 +130,11 @@ def checkout_resource(id):
         except:
             return jsonify(message="Global Hardware ID not found", status=404), 404
 
+        available_resources = globalHardware['available_resources']
+        if(req_json['qty'] > available_resources):
+            return jsonify(message="Not enough Global HW resources"), 400
+
+
         hardware_set = project['hardware_set']
 
         dt = datetime.now(timezone.utc)
@@ -137,10 +142,10 @@ def checkout_resource(id):
         time = utc_time.timestamp()
 
         # time, qty
-        if req_json['hardware_id'] in hardware_set:
+        if req_json['hardware_id'] in hardware_set: # HW resource currently in project
             hardware_set[req_json['hardware_id']]['time'].append([time, req_json['qty']])
             hardware_set[req_json['hardware_id']]['qty'] += req_json['qty']
-        else:
+        else: # add global HW resource to project
             # {hardwareid: {'qty': 5, 'time': [['1:09':5],['1:10':10]}, hardwareid2: {'qty': 5, 'time': [['1:09':5],['1:10':10]}}
             hardware_set[req_json['hardware_id']] = {'qty': req_json['qty'], 'time': [[time, req_json['qty']]]}
         project.save()
