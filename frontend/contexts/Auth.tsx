@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
                 getRequest(`${envs[process.env.appEnv]}/user/auth`).then(
                     (data) => {
                         // Use status to determine validity of user
-                        const { status } = data
+                        const { status } = data //Equivalent const status = data.status
                         if (status == 200) {
                             data = data.user
                             const { first_name, last_name, email } = data
