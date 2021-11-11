@@ -120,7 +120,12 @@ def checkout_resource(id):
     if request.is_json:
         # Get Json from Request
         req_json = request.get_json()
-        project = Project.objects(id=id).first()
+        try:
+            project = Project.objects(id=id).first()
+        except:
+            return jsonify(message="Project ID not found", status=404), 404
+
+
         hardware_set = project['hardware_set']
 
         dt = datetime.now(timezone.utc)
@@ -162,7 +167,10 @@ def checkin_resource(id):
     if request.is_json:
         # Get Json from Request
         req_json = request.get_json()
-        project = Project.objects(id=id).first()
+        try:
+            project = Project.objects(id=id).first()
+        except:
+            return jsonify(message="Project ID not found", status=404), 404
         hardware_set = project['hardware_set']
 
         dt = datetime.now(timezone.utc)
