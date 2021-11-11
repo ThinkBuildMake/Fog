@@ -12,10 +12,8 @@ import {
 } from './Styles'
 // We make the assumption that the creator of the project will be handled server side and therefore will be using jwt token on backend to assign creator
 interface Form {
-    project_id: string | null
     description: string | null
     title: string | null
-    resources: number | null
 }
 
 interface CloseButton {
@@ -37,10 +35,8 @@ const ProjectForm: React.FC<CloseButton> = ({
 
     // Form State
     const [form, setForm] = useState<Form | null>({
-        project_id: '',
         description: '',
-        title: '',
-        resources: 0
+        title: ''
     })
 
     function submitProjectForm(event: MouseEvent): void {
@@ -70,12 +66,7 @@ const ProjectForm: React.FC<CloseButton> = ({
             | React.ChangeEvent<HTMLTextAreaElement>
     ) {
         event.preventDefault()
-        if (typeof form[event.target.name] == 'number') {
-            //TODO : enforce min max constraints
-            setForm({ ...form, resources: parseInt(event.target.value) })
-        } else {
-            setForm({ ...form, [event.target.name]: event.target.value })
-        }
+        setForm({ ...form, [event.target.name]: event.target.value })
     }
 
     return (

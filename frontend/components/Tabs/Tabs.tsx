@@ -23,6 +23,7 @@ interface Project {
     description: string
     hardware_set: any
     title: string
+    create_date: string
     _id: { $oid: string }
 }
 export default function NavTabs() {
@@ -63,7 +64,7 @@ export default function NavTabs() {
                         id: item._id.$oid,
                         name: item.title,
                         resourcesUsed: resourcesSum,
-                        date: '10/20/22'
+                        date: item.create_date
                     }
                 })
                 setProjects(filtered)
