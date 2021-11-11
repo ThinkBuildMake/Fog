@@ -17,7 +17,8 @@
         "paths": {
             "@components/*": ["components/*"],
             "@templates/*": ["templates/*"],
-            "@functions/*": ["functions/*"]
+            "@functions/*": ["functions/*"],
+            "@reducers/*": ["reducers/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "fonts/fonts.js"],

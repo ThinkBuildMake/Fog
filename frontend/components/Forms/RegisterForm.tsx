@@ -2,7 +2,14 @@ import { checkFormValuesEmpty } from '@functions/customfuncs'
 import React, { MouseEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAuth } from 'contexts/Auth'
-
+import { Sizes } from '@functions/customfuncs'
+import GenericButton from '@components/Button/Generic/GenericButton'
+import {
+    Table,
+    OneColumnRow,
+    TwoColumnRowElement,
+    TwoColumnsRow
+} from './Styles'
 interface Form {
     email: string | null
     password: string | null
@@ -10,8 +17,19 @@ interface Form {
     first_name: string | null
     last_name: string | null
 }
+interface CloseButton {
+    closeFunc: (event: React.MouseEvent<HTMLButtonElement>) => void
+    closeTxt: string
+    color: string
+    size?: Sizes
+}
 
-const RegisterForm: React.FC = () => {
+const RegisterForm: React.FC<CloseButton> = ({
+    closeFunc,
+    closeTxt,
+    color,
+    size
+}) => {
     const router = useRouter()
     const { register } = useAuth()
 
@@ -50,10 +68,21 @@ const RegisterForm: React.FC = () => {
     }
 
     return (
-        <div className="inner-container">
-            <div className="box">
-                <div className="input-group">
-                    <label htmlFor="first-name">First Name</label>
+        <Table>
+            <OneColumnRow>
+                <th>Email</th>
+                <input
+                    type="text"
+                    name="email"
+                    className="login-input"
+                    placeholder="Email"
+                    onChange={handleInputEvent}
+                />
+            </OneColumnRow>
+
+            <TwoColumnsRow>
+                <TwoColumnRowElement>
+                    <th>First Name</th>
                     <input
                         type="text"
                         name="first_name"
@@ -61,10 +90,9 @@ const RegisterForm: React.FC = () => {
                         placeholder="John"
                         onChange={handleInputEvent}
                     />
-                </div>
-
-                <div className="input-group">
-                    <label htmlFor="last-name">Last Name</label>
+                </TwoColumnRowElement>
+                <TwoColumnRowElement>
+                    <th>Last Name</th>
                     <input
                         type="text"
                         name="last_name"
@@ -72,21 +100,12 @@ const RegisterForm: React.FC = () => {
                         placeholder="Smith"
                         onChange={handleInputEvent}
                     />
-                </div>
+                </TwoColumnRowElement>
+            </TwoColumnsRow>
 
-                <div className="input-group">
-                    <label htmlFor="username">Email</label>
-                    <input
-                        type="text"
-                        name="email"
-                        className="login-input"
-                        placeholder="Email"
-                        onChange={handleInputEvent}
-                    />
-                </div>
-
-                <div className="input-group">
-                    <label htmlFor="password">Password</label>
+            <TwoColumnsRow>
+                <TwoColumnRowElement>
+                    <th>Password</th>
                     <input
                         type="password"
                         name="password"
@@ -94,9 +113,9 @@ const RegisterForm: React.FC = () => {
                         placeholder="Password"
                         onChange={handleInputEvent}
                     />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="password-check">Check Password</label>
+                </TwoColumnRowElement>
+                <TwoColumnRowElement>
+                    <th>Check Password</th>
                     <input
                         type="password"
                         name="password_check"
@@ -104,17 +123,23 @@ const RegisterForm: React.FC = () => {
                         placeholder="Retype Your Password"
                         onChange={handleInputEvent}
                     />
-                </div>
+                </TwoColumnRowElement>
+            </TwoColumnsRow>
 
-                <button
-                    type="button"
-                    className="login-btn"
-                    onClick={submitRegister}
-                >
-                    Register for Account
-                </button>
-            </div>
-        </div>
+            <button
+                type="button"
+                className="login-btn"
+                onClick={submitRegister}
+            >
+                Register
+            </button>
+            <GenericButton
+                size={size}
+                text={closeTxt}
+                onClick={closeFunc}
+                color={color}
+            />
+        </Table>
     )
 }
 export default RegisterForm

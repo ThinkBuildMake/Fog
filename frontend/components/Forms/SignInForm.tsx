@@ -1,14 +1,32 @@
 import { checkFormValuesEmpty } from '@functions/customfuncs'
 import React, { MouseEvent, useState } from 'react'
 import { useRouter } from 'next/router'
+import { Sizes } from '@functions/customfuncs'
+import GenericButton from '@components/Button/Generic/GenericButton'
 import { useAuth } from 'contexts/Auth'
+import {
+    Table,
+    OneColumnRow,
+    TwoColumnRowElement,
+    TwoColumnsRow
+} from './Styles'
 
 interface Form {
     email: string | null
     password: string | null
 }
-
-const SignInForm: React.FC = () => {
+interface CloseButton {
+    closeFunc: (event: React.MouseEvent<HTMLButtonElement>) => void
+    closeTxt: string
+    color: string
+    size?: Sizes
+}
+const SignInForm: React.FC<CloseButton> = ({
+    closeFunc,
+    closeTxt,
+    color,
+    size
+}) => {
     const router = useRouter()
     const { login } = useAuth()
     // Form State
@@ -36,39 +54,39 @@ const SignInForm: React.FC = () => {
     }
 
     return (
-        <div className="inner-container">
-            <div className="box">
-                <div className="input-group">
-                    <label htmlFor="username">Email</label>
-                    <input
-                        type="text"
-                        name="email"
-                        className="login-input"
-                        placeholder="Email"
-                        onChange={handleInputEvent}
-                    />
-                </div>
+        <Table>
+            <OneColumnRow>
+                <th> Email</th>
+                <input
+                    type="text"
+                    name="email"
+                    className="login-input"
+                    placeholder="Email"
+                    onChange={handleInputEvent}
+                />
+            </OneColumnRow>
 
-                <div className="input-group">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        className="login-input"
-                        placeholder="Password"
-                        onChange={handleInputEvent}
-                    />
-                </div>
+            <OneColumnRow>
+                <th>Password</th>
+                <input
+                    type="password"
+                    name="password"
+                    className="login-input"
+                    placeholder="Password"
+                    onChange={handleInputEvent}
+                />
+            </OneColumnRow>
 
-                <button
-                    type="button"
-                    className="login-btn"
-                    onClick={submitSignIn}
-                >
-                    Login
-                </button>
-            </div>
-        </div>
+            <button type="button" className="login-btn" onClick={submitSignIn}>
+                Login
+            </button>
+            <GenericButton
+                size={size}
+                text={closeTxt}
+                onClick={closeFunc}
+                color={color}
+            />
+        </Table>
     )
 }
 export default SignInForm

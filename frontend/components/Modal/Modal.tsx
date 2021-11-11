@@ -8,7 +8,12 @@ interface Props {
     buttonOpenText: string
     buttonCloseText: string
     modalTitle: string
-    modalContent: React.ReactNode
+    modalContent: React.FC<{
+        closeFunc: (event: React.MouseEvent<HTMLButtonElement>) => void
+        closeTxt: string
+        color: string
+        size: Sizes
+    }> // Change: https://stackoverflow.com/questions/63162409/how-to-pass-node-as-prop-to-component-in-react, https://www.pluralsight.com/guides/typescript-pass-function-react
     size?: Sizes
     color?: string
 }
@@ -23,6 +28,8 @@ const _Modal: React.FC<Props> = ({
 }) => {
     // State variable determining modal open state
     const [toggle, setToggle] = useState<boolean | null>(false)
+
+    const InputContent = modalContent
 
     function showModal(event: MouseEvent) {
         event.preventDefault()
@@ -93,14 +100,13 @@ const _Modal: React.FC<Props> = ({
                     >
                         {modalTitle}
                     </h1>
-                    {modalContent}
+                    <InputContent
+                        closeFunc={closeModal}
+                        closeTxt={buttonCloseText}
+                        color={color}
+                        size={Sizes.MEDIUM}
+                    />
                 </div>
-                <GenericButton
-                    size={Sizes.MEDIUM}
-                    text={buttonCloseText}
-                    onClick={closeModal}
-                    color={color}
-                />
             </Modal>
         </div>
     )

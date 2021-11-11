@@ -6,7 +6,6 @@ import Header from '@components/Header/Header'
 const Home: React.FC = () => {
     return (
         <DefaultLayout>
-            <Header />
             <NavTabs />
         </DefaultLayout>
     )

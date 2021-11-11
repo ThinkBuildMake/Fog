@@ -1,39 +1,37 @@
 import React, { useEffect } from 'react'
 import { Table, DownloadButton } from './Styles'
+import { createDataSet } from '@functions/customfuncs'
 
-function createData(title, link) {
-    return { title: title, link: link }
-}
 const dataSetData = [
-    createData(
+    createDataSet(
         'Abdominal and Direct Fetal ECG Database',
         'https://physionet.org/static/published-projects/adfecgdb/abdominal-and-direct-fetal-ecg-database-1.0.0.zip'
     ),
-    createData(
+    createDataSet(
         'AF Termination Challenge Database',
         'https://physionet.org/static/published-projects/aftdb/af-termination-challenge-database-1.0.0.zip'
     ),
-    createData(
+    createDataSet(
         'AHA Database Sample Excluded Record',
         'https://physionet.org/static/published-projects/ahadb/aha-database-sample-excluded-record-1.0.0.zip'
     ),
-    createData(
+    createDataSet(
         'ANSI/AAMI EC13 Test Waveforms',
         'https://physionet.org/static/published-projects/aami-ec13/ansiaami-ec13-test-waveforms-1.0.0.zip'
     ),
-    createData(
+    createDataSet(
         'Apnea-ECG Database',
         'https://physionet.org/static/published-projects/aami-ec13/ansiaami-ec13-test-waveforms-1.0.0.zip'
     ),
-    createData(
+    createDataSet(
         'A Pressure Map Dataset for In-bed Posture Classification',
         'https://physionet.org/static/published-projects/pmd/a-pressure-map-dataset-for-in-bed-posture-classification-1.0.0.zip'
     ),
-    createData(
+    createDataSet(
         'BIDMC Congestive Heart Failure Database',
         'https://physionet.org/static/published-projects/chfdb/bidmc-congestive-heart-failure-database-1.0.0.zip'
     ),
-    createData(
+    createDataSet(
         'BIDMC PPG and Respiration Dataset',
         'https://physionet.org/static/published-projects/bidmc/bidmc-ppg-and-respiration-dataset-1.0.0.zip'
     )
@@ -70,9 +68,13 @@ const DataSetTable: React.FC = () => {
                 <DataSetTableTopRow />
             </thead>
             <tbody>
-                {dataSetData.map((item) => {
+                {dataSetData.map((item, idx) => {
                     return (
-                        <DataSetTableRow title={item.title} link={item.link} />
+                        <DataSetTableRow
+                            title={item.title}
+                            link={item.link}
+                            key={`${idx}-dataset-item`}
+                        />
                     )
                 })}
             </tbody>
