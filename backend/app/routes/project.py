@@ -236,7 +236,7 @@ def checkin_resource(id):
 def get_projects():
     return jsonify(status=200, message="Success", data=Project.objects),200
 
-@project.route("/<string:user_email>", methods=['GET'])
+@project.route("/<string:user_email>/email", methods=['GET'])
 @jwt_required()
 def get_projects_user(user_email):
     userProjectList = []
@@ -246,7 +246,7 @@ def get_projects_user(user_email):
                 userProjectList.append(cur_project)
     return jsonify(status=200, message="Success", data=userProjectList),200
 
-@project.route("/<string:id>", methods=['GET'])
+@project.route("/<string:id>/project_id", methods=['GET'])
 @jwt_required()
 def get_project(id):
     project = Project.objects(id=id).first()
