@@ -17,6 +17,7 @@ import {
 } from 'reducers/ResourcesReducer'
 //import ProjectTable from '@components/Projects/ProjectTable'
 import ProjectsTable from '@components/Table/ProjectsTable/ProjectsTable'
+import { useAuth } from 'contexts/Auth'
 
 interface Project {
     user_id: string
@@ -49,10 +50,13 @@ export default function NavTabs() {
     }, [])
 
     const [projects, setProjects] = useState([])
+    const currentUser = useAuth()
 
     //User is defined by their email
     useEffect(() => {
-        getRequest(`${envs[process.env.appEnv]}/project/`).then((projs) => {
+        getRequest(
+            `${envs[process.env.appEnv]}/project/${currentUser.user.email}`
+        ).then((projs) => {
             const { data, status } = projs
             if (status == 200) {
                 let filtered = data.map((item: Project) => {
