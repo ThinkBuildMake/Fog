@@ -5,6 +5,7 @@ import { RootDiv } from './Styles'
 import Modal from '@components/Modal/Modal'
 import { envs, getRequest, Sizes } from '@functions/customfuncs'
 import ProjectForm from '@components/Forms/ProjectForm'
+import ProjectJoinForm from '@components/Forms/ProjectJoinForm'
 import DataSetTable from '@components/Table/DataSetTable/DataSetTable'
 import ResourcesTabs from './ResourcesTabs'
 import { ResourceContext } from 'contexts/Resources'
@@ -117,6 +118,15 @@ export default function NavTabs() {
                     size={Sizes.MEDIUM}
                     color="#2f3138"
                 />
+                <Modal
+                    buttonOpenText="Join"
+                    modalContent={ProjectJoinForm}
+                    modalTitle="Join Existing Project"
+                    buttonCloseText="Close"
+                    size={Sizes.MEDIUM}
+                    color="#2f3138"
+                />
+
                 <ProjectsTable projects={projects} />
             </TabPanel>
             <TabPanel value={currentTab} index={1}>
